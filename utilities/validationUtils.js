@@ -1,3 +1,4 @@
+//const { param } = require("../routes/signin")
 
 /**
  * Checks the parameter to see if it is a a String with a length greater than 0.
@@ -13,8 +14,14 @@ let isStringProvided = (param) =>
 // for example: isNumericProvided, isValidPassword, isValidEmail, etc
 // don't forget to export any 
 
-
+function isValidEmail(email){
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+}
+    
+function isValidPassword(password){
+  return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,}$/.test(password)
+}
   
 module.exports = { 
-  isStringProvided
+  isStringProvided, isValidEmail, isValidPassword
 }

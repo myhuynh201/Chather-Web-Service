@@ -6,6 +6,8 @@ const pool = require('../utilities').pool
 
 const validation = require('../utilities').validation
 let isStringProvided = validation.isStringProvided
+let isValidEmail = validation.isValidEmail
+let isValidPassword = validation.isValidPassword
 
 const generateHash = require('../utilities').generateHash
 const generateSalt = require('../utilities').generateSalt
@@ -61,43 +63,57 @@ router.post('/', (request, response) => {
         && isStringProvided(username) 
         && isStringProvided(email) 
         && isStringProvided(password)) {
-        //We're storing salted hashes to make our application more secure
-        //If you're interested as to what that is, and why we should use it
-        //watch this youtube video: https://www.youtube.com/watch?v=8ZtInClXe1Q
-        let salt = generateSalt(32)
-        let salted_hash = generateHash(password, salt)
-        
-        //We're using placeholders ($1, $2, $3) in the SQL query string to avoid SQL Injection
-        //If you want to read more: https://stackoverflow.com/a/8265319
-        let theQuery = "INSERT INTO MEMBERS(FirstName, LastName, Username, Email, Password, Salt) VALUES ($1, $2, $3, $4, $5, $6) RETURNING Email"
-        let values = [first, last, username, email, salted_hash, salt]
-        pool.query(theQuery, values)
-            .then(result => {
-                //We successfully added the user!
-                response.status(201).send({
-                    success: true,
-                    email: result.rows[0].email
-                })
-                sendEmail("our.email@lab.com", email, "Welcome to our App!", "Please verify your Email account.")
-            })
-            .catch((error) => {
-                //log the error
-                // console.log(error)
-                if (error.constraint == "members_username_key") {
-                    response.status(400).send({
-                        message: "Username exists"
+            if(isValidEmail(email)){
+                if(isValidPassword(password)) {            
+                //We're storing salted hashes to make our application more secure
+                //If you're interested as to what that is, and why we should use it
+                //watch this youtube video: https://www.youtube.com/watch?v=8ZtInClXe1Q
+                let salt = generateSalt(32)
+                let salted_hash = generateHash(password, salt)
+                
+                //We're using placeholders ($1, $2, $3) in the SQL query string to avoid SQL Injection
+                //If you want to read more: https://stackoverflow.com/a/8265319
+                let theQuery = "INSERT INTO MEMBERS(FirstName, LastName, Username, Email, Password, Salt) VALUES ($1, $2, $3, $4, $5, $6) RETURNING Email"
+                let values = [first, last, username, email, salted_hash, salt]
+                pool.query(theQuery, values)
+                    .then(result => {
+                        //We successfully added the user!
+                        response.status(201).send({
+                            success: true,
+                            email: result.rows[0].email
+                        })
+                        sendEmail("our.email@lab.com", email, "Welcome to our App!", "Please verify your Email account.")
                     })
-                } else if (error.constraint == "members_email_key") {
-                    response.status(400).send({
-                        message: "Email exists"
+                    .catch((error) => {
+                        //log the error
+                        // console.log(error)
+                        if (error.constraint == "members_username_key") {
+                            response.status(400).send({
+                                message: "Username exists"
+                            })
+                        } else if (error.constraint == "members_email_key") {
+                            response.status(400).send({
+                                message: "Email exists"
+                            })
+                        } else {
+                            response.status(400).send({
+                                message: "other error, see detail",
+                                detail: error.detail
+                            })
+                        }
                     })
                 } else {
                     response.status(400).send({
-                        message: "other error, see detail",
-                        detail: error.detail
+                        message: "Invalid Password"
                     })
                 }
-            })
+            } else {
+                response.status(400).send({
+                    message: "Invalid Email"
+                })
+            }
+                
+
     } else {
         response.status(400).send({
             message: "Missing required information"

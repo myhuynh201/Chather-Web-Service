@@ -6,6 +6,8 @@ const pool = require('../utilities').pool
 
 const validation = require('../utilities').validation
 let isStringProvided = validation.isStringProvided
+let isValidEmail = validation.isValidEmail
+let isValidPassword = validation.isValidPassword
 
 const generateHash = require('../utilities').generateHash
 
@@ -59,7 +61,7 @@ router.get('/', (request, response, next) => {
 
     const [email, password] = credentials.split(':')
 
-    if (isStringProvided(email) && isStringProvided(password)) {
+    if (isStringProvided(email) && isStringProvided(password)&& isValidEmail(email) && isValidPassword(password)) {
         request.auth = { 
             "email" : email,
             "password" : password
