@@ -22,8 +22,7 @@ app.use(middleware.jsonErrorInBody)
 app.use('/auth', require('./routes/signin.js'))
 app.use('/auth', require('./routes/register.js'))
 
-const validation = require('./utilities').validation 
-let isStringProvided = validation.isStringProvided
+
 /*
  * Return HTML for the / end point. 
  * This is a nice location to document your web service API
