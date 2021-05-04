@@ -61,7 +61,7 @@ router.get('/', (request, response, next) => {
 
     const [email, password] = credentials.split(':')
 
-    if (isStringProvided(email) && isStringProvided(password)&& isValidEmail(email) && isValidPassword(password)) {
+    if (isStringProvided(email) && isStringProvided(password) && isValidEmail(email) && isValidPassword(password)) {
         request.auth = { 
             "email" : email,
             "password" : password
@@ -69,7 +69,7 @@ router.get('/', (request, response, next) => {
         next()
     } else {
         response.status(400).send({
-            message: "Malformed Authorization Header"
+            message: "Either the entered email or password is not valid."
         })
     }
 }, (request, response) => {
@@ -113,9 +113,9 @@ router.get('/', (request, response, next) => {
                     token: token
                 })
             } else {
-                //credentials dod not match
+                //credentials did not match
                 response.status(400).send({
-                    message: 'Credentials did not match' 
+                    message: 'Passwords do not match.' 
                 })
             }
         })
