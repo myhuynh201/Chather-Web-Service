@@ -17,6 +17,31 @@ let sendEmail = (sender, receiver, subject, message) => {
 
 }
 
+var nodemailer = require('nodemailer');
+
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'chathergroup7@gmail.com',
+    pass: 'iLuY9ayEGkBxqWd!2'
+  }
+});
+
+var mailOptions = {
+  from: 'chathergroup7@gmail.com',
+  to: 'evanfrost320@gmail.com',
+  subject: 'Sending Email using Node.js',
+  text: 'That was easy!'
+};
+
+transporter.sendMail(mailOptions, function(error, info){
+  if (error) {
+    console.log(error);
+  } else {
+    console.log('Email sent: ' + info.response);
+  }
+}); 
+
 module.exports = { 
     sendEmail
 }
