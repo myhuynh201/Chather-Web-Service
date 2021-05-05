@@ -10,13 +10,23 @@ let isStringProvided = (param) =>
     param !== undefined && param.length > 0
 
 
-// Feel free to add your own validations functions!
-// for example: isNumericProvided, isValidPassword, isValidEmail, etc
-// don't forget to export any 
-
+/**
+ * Checks the parameter to see if it is a valid email address.
+ * 
+ * @param {string} email the value to check
+ * @returns true if the parameter is a valid email address, false otherwise
+ */
 function isValidEmail(email){
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
+
+/**
+ * Checks the parameter to see if it is a valid password with at least 7 characters, 
+ * 1 uppercase, 1 lowercase and 1 special character
+ * 
+ * @param {string} password the value to check
+ * @returns true if the parameter is a valid password, false otherwise
+ */
     
 function isValidPassword(password){
   return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{7,}$/.test(password)
