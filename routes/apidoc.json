@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "description": "The Chather Web Service API Documentation",
     "title": "Lab API Doc",
-    "url" : " https://tcss450-android-app.herokuapp.com/",
+    "url" : " https://tcss450-android-app.herokuapp.com",
     "order": [
       "Register",
       "Sign In"
