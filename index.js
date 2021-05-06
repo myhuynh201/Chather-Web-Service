@@ -18,6 +18,7 @@ app.use(express.json())
  * request parameters.
  */
 app.use(middleware.jsonErrorInBody)
+app.use("/doc", express.static('apidoc'))
 
 app.use('/auth', require('./routes/signin.js'))
 app.use('/auth', require('./routes/register.js'))
