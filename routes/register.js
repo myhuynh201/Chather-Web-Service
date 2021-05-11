@@ -12,10 +12,27 @@ let isValidPassword = validation.isValidPassword
 const generateHash = require('../utilities').generateHash
 const generateSalt = require('../utilities').generateSalt
 
-const sendEmail = require('../utilities').sendEmail
+const sendVerificationEmail = require('../utilities/email').sendVerificationEmail;
 
-const router = express.Router()
 
+var router = express.Router()
+
+
+const jwt = require("jsonwebtoken")
+const config = {
+    secret: process.env.JSON_WEB_TOKEN
+}
+
+const bodyParser = require("body-parser")
+//Parsing the body of POST requests that are encoded in JSON
+router.use(bodyParser.json())
+
+require('dotenv').config();
+
+const nodemailer = require('nodemailer');
+const log = console.log;
+var first, last, username, email, password;
+var rand, mailOptions, host, link;
 /**
  * @api {post} /auth Request to register a user
  * @apiName PostAuth
@@ -45,17 +62,23 @@ const router = express.Router()
  * @apiError (400: Email exists) {String} message "Email exists"
  *  
  * @apiError (400: Other Error) {String} message "other error, see detail"
- * @apiError (400: Other Error) {String} detail Information about th error
+ * @apiError (400: Other Error) {String} detail Information about the error
  * 
  */ 
 router.post('/', (request, response) => {
 
     //Retrieve data from query params
-    const first = request.body.first
-    const last = request.body.last
-    const username = isStringProvided(request.body.username) ?  request.body.username : request.body.email
-    const email = request.body.email
-    const password = request.body.password
+    first = request.body.first
+    last = request.body.last
+    username = isStringProvided(request.body.username) ?  request.body.username : request.body.email
+    email = request.body.email
+    password = request.body.password
+    let token = jwt.sign({email: email},
+        config.secret,
+        {
+            expiresIn: '1H' // expires in 1 hour
+        }
+    );
     //Verify that the caller supplied all the parameters
     //In js, empty strings or null values evaluate to false
     if(isStringProvided(first) 
@@ -66,13 +89,10 @@ router.post('/', (request, response) => {
             if(isValidEmail(email)){
                 if(isValidPassword(password)) {            
                 //We're storing salted hashes to make our application more secure
-                //If you're interested as to what that is, and why we should use it
-                //watch this youtube video: https://www.youtube.com/watch?v=8ZtInClXe1Q
                 let salt = generateSalt(32)
                 let salted_hash = generateHash(password, salt)
                 
                 //We're using placeholders ($1, $2, $3) in the SQL query string to avoid SQL Injection
-                //If you want to read more: https://stackoverflow.com/a/8265319
                 let theQuery = "INSERT INTO MEMBERS(FirstName, LastName, Username, Email, Password, Salt) VALUES ($1, $2, $3, $4, $5, $6) RETURNING Email"
                 let values = [first, last, username, email, salted_hash, salt]
                 pool.query(theQuery, values)
@@ -82,7 +102,30 @@ router.post('/', (request, response) => {
                             success: true,
                             email: result.rows[0].email
                         })
-                        sendEmail("our.email@lab.com", email, "Welcome to our App!", "Please verify your Email account.")
+                        //sendVerificationEmail(result.rows[0].email);                       
+                        let transporter = nodemailer.createTransport({
+                            service: 'gmail',
+                            auth: {
+                                user: process.env.EMAIL, 
+                                pass: process.env.PASSWORD
+                            }
+                        });
+
+                        link="http://"+request.get('host')+"/verify?name="+token;
+                        mailOptions = {
+                            from: 'chatherapp@gmail.com', 
+                            to: result.rows[0].email, 
+                            subject: 'Welcome! Verification required',
+                            html: "Welcome to Chather! <br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>"
+                        };
+                      
+                        transporter.sendMail(mailOptions, (err, data) => {
+                            if (err) {
+                                return log('Error occurs',);
+                            }
+                            return log('Email sent!!!');
+                        });
+
                     })
                     .catch((error) => {
                         //log the error
@@ -120,20 +163,5 @@ router.post('/', (request, response) => {
         })
     }
 })
-
-router.get('/hash_demo', (request, response) => {
-    let password = 'hello12345'
-
-    let salt = generateSalt(32)
-    let salted_hash = generateHash(password, salt)
-    let unsalted_hash = generateHash(password)
-
-    response.status(200).send({
-        'salt': salt,
-        'salted_hash': salted_hash,
-        'unsalted_hash': unsalted_hash
-    })
-})
-
 
 module.exports = router

@@ -22,6 +22,7 @@ app.use("/doc", express.static('apidoc'))
 
 app.use("/auth", require('./routes/signin.js'))
 app.use("/auth", require('./routes/register.js'))
+app.use("/verify", require('./routes/verify.js'))
 
 const validation = require('./utilities').validation 
 let isStringProvided = validation.isStringProvided

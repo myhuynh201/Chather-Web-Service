@@ -6,8 +6,6 @@ const pool = require('../utilities').pool
 
 const validation = require('../utilities').validation
 let isStringProvided = validation.isStringProvided
-let isValidEmail = validation.isValidEmail
-let isValidPassword = validation.isValidPassword
 
 const generateHash = require('../utilities').generateHash
 
@@ -61,7 +59,7 @@ router.get('/', (request, response, next) => {
 
     const [email, password] = credentials.split(':')
 
-    if (isStringProvided(email) && isStringProvided(password) && isValidEmail(email) && isValidPassword(password)) {
+    if (isStringProvided(email) && isStringProvided(password)) {
         request.auth = { 
             "email" : email,
             "password" : password
@@ -95,28 +93,40 @@ router.get('/', (request, response, next) => {
 
             //Did our salted hash match their salted hash?
             if (storedSaltedHash === providedSaltedHash ) {
-                //credentials match. get a new JWT
-                let token = jwt.sign(
-                    {
-                        "email": request.auth.email,
-                        "memberid": result.rows[0].memberid
-                    },
-                    config.secret,
-                    { 
-                        expiresIn: '60 days' // expires in 14 days
+
+                let verifyQuery = "SELECT Verification FROM Members WHERE EMAIL=$1";
+                pool.query(verifyQuery, values).then(result => {
+                    if(result.rows[0].verification == 1) {
+                        //credentials match. get a new JWT
+                        let token = jwt.sign(
+                            {
+                                "email": request.auth.email,
+                                "memberid": result.rows[0].memberid
+                            },
+                            config.secret,
+                            { 
+                                expiresIn: '14 days' // expires in 14 days
+                            }
+                        );
+                        //package and send the results
+                        response.json({
+                        success: true,
+                        message: 'Authentication successful!',
+                        token: token
+                        });
+
+                    } else {
+                        response.status(400).send({
+                            message: 'Email not yet verified.' 
+                        });
                     }
-                )
-                //package and send the results
-                response.json({
-                    success: true,
-                    message: 'Authentication successful!',
-                    token: token
                 })
+                
             } else {
                 //credentials did not match
                 response.status(400).send({
                     message: 'Passwords do not match.' 
-                })
+                });
             }
         })
         .catch((err) => {
@@ -124,8 +134,9 @@ router.get('/', (request, response, next) => {
             console.log(err.stack)
             response.status(400).send({
                 message: err.detail
-            })
+            });
         })
-})
+});
 
 module.exports = router
+

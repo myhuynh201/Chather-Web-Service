@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cfb3/tcss-450-web-service-starter"
+    "url": "git+https://github.com/cfb3/tcss-450-web-service-starter.git"
   },
   "scripts": {
     "test": "index.js"
@@ -18,12 +18,19 @@
   "author": "TCSS 450",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "form-data": "^3.0.0",
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
+    "nodemailer": "^6.6.0",
     "npm": "^6.14.0",
     "pg": "^8.0.2",
     "pushy": "^2.0.8"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/cfb3/tcss-450-web-service-starter/issues"
+  },
+  "homepage": "https://github.com/cfb3/tcss-450-web-service-starter#readme",
+  "devDependencies": {}
 }
