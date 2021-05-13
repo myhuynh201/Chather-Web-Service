@@ -32,7 +32,7 @@ require('dotenv').config();
 const nodemailer = require('nodemailer');
 const log = console.log;
 var first, last, username, email, password;
-var rand, mailOptions, host, link;
+var mailOptions, link;
 /**
  * @api {post} /auth Request to register a user
  * @apiName PostAuth
@@ -111,12 +111,12 @@ router.post('/', (request, response) => {
                             }
                         });
 
-                        link="http://"+request.get('host')+"/verify?name="+token;
+                        link="http://"+request.get('host')+"/support?mode=verification&name="+token;
                         mailOptions = {
                             from: 'chatherapp@gmail.com', 
                             to: result.rows[0].email, 
                             subject: 'Welcome! Verification required',
-                            html: "Welcome to Chather! <br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>"
+                            html: "Welcome to Chather! <br><br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>"
                         };
                       
                         transporter.sendMail(mailOptions, (err, data) => {

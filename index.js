@@ -22,10 +22,11 @@ app.use("/doc", express.static('apidoc'))
 
 app.use("/auth", require('./routes/signin.js'))
 app.use("/auth", require('./routes/register.js'))
+app.use("/support", require('./routes/support.js'))
 app.use("/verify", require('./routes/verify.js'))
+app.use("/forgot", require('./routes/forgot.js'))
+app.use("/reset", require('./routes/reset.js'))
 
-const validation = require('./utilities').validation 
-let isStringProvided = validation.isStringProvided
 
 /*
  * Return HTML for the / end point. 

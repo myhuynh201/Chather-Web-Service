@@ -1,0 +1,48 @@
+<style>
+    body {
+        padding-top: 100px;
+        text-align: center;
+        font-family: DejaVu Sans Mono, monospace;
+        background-size: 100% 100%;
+        font-size: 27px;
+    }
+    h1 {
+        display: inline-block;
+        font-size: 50px;
+        color: #0099ff;
+    }
+    button {
+        margin: auto;
+        cursor: pointer;
+        background-color: #0099ff;
+        border: 2px solid #0099ff;
+        border-radius: 4px;
+        color: #fff;
+        display: block;
+        font-family: inherit;
+        font-size: 16px;
+        padding: 10px;
+        margin-top: 40px;
+        width: 17%;     
+    }
+
+</style>
+<h1>Welcome to Chather</h1><br>
+<form name="verification" action="http://localhost:5000/verify" method="post">
+    <input type="hidden" name="name" id="token" value="">
+    <button type="submit">Verify your email</button>
+</form>
+
+<script>
+    window.onload = function getParameterFromUrl() {
+        let urlParamString = window.location.search.substring(1);
+        let paramPairs = urlParamString.split("&");
+        for (let i = 0; i < paramPairs.length; i++) {
+            let keyValuePair = paramPairs[i].split("=");
+            if (keyValuePair[0] === "name") {
+                document.getElementById("token").value = keyValuePair[1];
+            }
+        }
+    };
+
+</script>

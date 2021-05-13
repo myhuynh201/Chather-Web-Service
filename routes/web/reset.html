@@ -1,0 +1,92 @@
+<style>
+    body {
+        padding-top: 100px;
+        text-align: center;
+        font-family: DejaVu Sans Mono, monospace;
+        background-size: 100% 100%;
+        font-size: 27px;
+    }
+    h1 {
+        display: inline-block;
+        font-size: 50px;
+        color: #0099ff;
+    }
+    h2 {
+        display: inline-block;
+        font-size: 30px;
+        color: #865a18;
+        margin-bottom: 60px;
+    }
+    
+
+    label{
+        display: inline-block;
+        width: 300px;
+        text-align: cen; 
+        color: black;
+        font-size: 20px;
+    }
+    input {
+        display: inline-block;
+        margin-bottom: 20px;
+        font-size: 20px;
+    }
+
+    button {
+        margin: auto;
+        cursor: pointer;
+        background-color: #0099ff;
+        border: 2px solid #0099ff;
+        border-radius: 4px;
+        color: #fff;
+        display: block;
+        font-family: inherit;
+        font-size: 16px;
+        padding: 10px;
+        margin-top: 40px;
+        width: 17%;     
+    }
+   
+    
+</style>
+<h1>Welcome to Chather</h1><br>
+<section>
+    <h2>Set a new password</h2>
+    <form name="reset" action="http://localhost:5000/reset" method="post" onSubmit="return checkForm(this)">
+        <input type="hidden" name="name" id="token" value="">
+        <br/>
+        <label for="password">Password:</label>
+        <input type ="password" name="password" id="password" value="" pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{7,}$" required oninput="setCustomValidity('')">
+        <br/>
+        <label for="confirm">Confirm password:</label>
+        <input type ="password" name="password2" id="password2" value="" required oninput="setCustomValidity('')">
+        <br/>
+        <button type="submit"  id="passwordsubmit">Reset your password</button>
+
+        <script>
+            function checkForm(form) {
+                if (form.password.value !== form.password2.value) {
+                    form.password2.setCustomValidity("Passwords do not match!");
+                    form.password2.focus();
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+            window.onload = function getParameterFromUrl() {
+                let urlParamString = window.location.search.substring(1);
+                let paramPairs = urlParamString.split("&");
+                for (let i = 0; i < paramPairs.length; i++) {
+                    let keyValuePair = paramPairs[i].split("=");
+                    if (keyValuePair[0] === "name") {
+                        document.getElementById("token").value = keyValuePair[1];
+                    }
+                }
+            };
+
+        </script>
+    </form>
+
+
+</section>
