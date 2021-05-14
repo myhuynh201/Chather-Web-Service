@@ -26,6 +26,7 @@ app.use("/support", require('./routes/support.js'))
 app.use("/verify", require('./routes/verify.js'))
 app.use("/forgot", require('./routes/forgot.js'))
 app.use("/reset", require('./routes/reset.js'))
+app.use("/changePassword", require('./routes/changePassword.js'))
 
 
 /*
