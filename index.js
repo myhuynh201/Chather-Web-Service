@@ -22,13 +22,20 @@ app.use("/doc", express.static('apidoc'))
 
 app.use("/auth", require('./routes/signin.js'))
 app.use("/auth", require('./routes/register.js'))
+app.use("/support", require('./routes/support.js'))
 app.use("/verify", require('./routes/verify.js'))
 //The app will navigate to the weather.js file once we include /weather in the url of our app
 //we apparently need to check the token in order to use the API, not the jwt though
 app.use("/weather", middleware.checkToken, require("./routes/weather.js"))
+app.use("/forgot", require('./routes/forgot.js'))
+app.use("/reset", require('./routes/reset.js'))
+app.use("/changePassword", require('./routes/changePassword.js'))
 
-const validation = require('./utilities').validation 
-let isStringProvided = validation.isStringProvided
+app.use("/messages", middleware.checkToken, require('./routes/messages'))
+app.use("/chats", middleware.checkToken, require('./routes/chats.js'))
+app.use("/auth", middleware.checkToken, require('./routes/pushyregister'))
+
+
 
 /*
  * Return HTML for the / end point. 

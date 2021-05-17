@@ -26,7 +26,7 @@ let path = require('path');
 
 /**
  * @api {Post} /verify?name=params Request to update verification status
- * @apiName PutVerify
+ * @apiName PostVerify
  * @apiGroup Verify
  *
  * @apiParam {String} token from email
@@ -41,10 +41,10 @@ let path = require('path');
  * 
  * */
 
-router.post("/", (request, respond) => {
-    if (request.query.name) {
-        console.log(request.query.name);
-        let decoded = jwt.decode(request.query.name);
+router.post("/", (request, response) => {
+    if (request.body.name) {
+        console.log(request.body.name);
+        let decoded = jwt.decode(request.body.name);
         let theQuery = "SELECT MemberID FROM MEMBERS WHERE Email = $1 AND Verification = 0";
         let values = [decoded.email];
         pool.query(theQuery, values)
@@ -53,35 +53,30 @@ router.post("/", (request, respond) => {
                     let updateQuery = "UPDATE MEMBERS SET Verification = 1 WHERE Email = $1";
                     pool.query(updateQuery, values)
                         .then(result => {
-                            respond.status(201).send({
-                                success: true,
-                                message: " verified!"
-                                
-                            });
                             
-                            respond.redirect("/verify");
+                            response.redirect("/verify");
                         })
                         .catch(err => {
-                            respond.status(400).send({
+                            response.status(400).send({
                                 message: err.detail
                             });
                           
                         })
                 } else {
                     
-                    respond.status(400).send({
+                    response.status(400).send({
                         message: "Email already verified or does not exist"
                     })
                 }
             })
             .catch(err => {
-                respond.status(400).send({
+                response.status(400).send({
                     message: err.detail
                 });
                 
             });
     } else {
-        respond.status(400).send({
+        response.status(400).send({
             message: "Invalid link"
         });
        
@@ -98,8 +93,8 @@ router.post("/", (request, respond) => {
  * @apiError (404: Not Found) {String} message "No such path exists"
  *
  */
-router.get("/", (req, res) => {
-    res.status(200).sendFile(path.join(__dirname + '/web/verify_successful.html'));
+router.get("/", (request, response) => {
+    response.status(200).sendFile(path.join(__dirname + '/web/verify_successful.html'));
 });
 
 
