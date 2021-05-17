@@ -28,6 +28,11 @@ app.use("/forgot", require('./routes/forgot.js'))
 app.use("/reset", require('./routes/reset.js'))
 app.use("/changePassword", require('./routes/changePassword.js'))
 
+app.use("/messages", middleware.checkToken, require('./routes/messages'))
+app.use("/chats", middleware.checkToken, require('./routes/chats.js'))
+app.use("/auth", middleware.checkToken, require('./routes/pushyregister'))
+
+
 
 /*
  * Return HTML for the / end point. 
