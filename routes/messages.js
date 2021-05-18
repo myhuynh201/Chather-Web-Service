@@ -46,8 +46,6 @@ router.post("/", (request, response, next) => {
         response.status(400).send({
             message: "Missing required information"
         })
-        console.log(request.body.chatID)
-        console.log(request.body.message)
     } else if (isNaN(request.body.chatId)) {
         response.status(400).send({
             message: "Malformed parameter. chatId must be a number"
@@ -67,7 +65,6 @@ router.post("/", (request, response, next) => {
                     message: "Chat ID not found"
                 })
             } else {
-                console.log(result)
                 next()
             }
         }).catch(error => {
@@ -75,8 +72,6 @@ router.post("/", (request, response, next) => {
                 message: "SQL Error on chatid check",
                 error: error
             })
-            console.log(request.body)
-            console.log(response.body)
         })
 }, (request, response, next) => {
             //validate memberid exists in the chat
@@ -134,8 +129,6 @@ router.post("/", (request, response, next) => {
         let values = [request.body.chatId]
         pool.query(query, values)
             .then(result => {
-                console.log(request.decoded.email)
-                console.log(request.body.message)
                 result.rows.forEach(entry => 
                     msg_functions.sendMessageToIndividual(
                         entry.token, 
