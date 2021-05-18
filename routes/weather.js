@@ -30,10 +30,10 @@ router.get("/", (req, res) => {
     
 
     //Retrieve data from query params
-    const lon = request.body.lon
-    const lat = request.body.lat
-    const exclude = request.body.exclude
-    const units = request.body.units
+    const lon = req.body.lon
+    const lat = req.body.lat
+    const exclude = req.body.exclude
+    const units = req.body.units
 
     //Needs checking for correctness and whether this string, while not a string literal, is fine.
     let url = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=" + exclude + "&units=" + units +"&appid=" + API_KEY
