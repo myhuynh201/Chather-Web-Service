@@ -26,7 +26,7 @@ router.get("/:memberId", (request,response, next) => {
         next()
     }
 }, (request, response) => {
-    let query = "SELECT Username FROM Members WHERE MemberID NOT $1 AND MemberID IN (SELECT MemberID_A, MemberID_B FROM CONTACTS WHERE MemberID_A = $1 or MemberID_B = $1)"
+    let query = "SELECT Username FROM Members WHERE MemberID != $1 AND (MemberID IN (SELECT MemberID_A FROM CONTACTS WHERE MemberID_B = $1) OR MemberID IN (SELECT MemberID_B FROM CONTACTS WHERE MemberID_A = $1)" 
     let values = [request.params.memberId]
     pool.query(query, values)
     .then(result => {
