@@ -22,7 +22,7 @@ var router = express.Router()
  * for additional parameters and additional information. An API key is required in order to
  * make calls with this endpoint. 
  */ 
-router.get("/weather", (req, res) => {
+router.get("/", (req, res) => {
 
     //An example of the call made using the One Call API.
     //https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}

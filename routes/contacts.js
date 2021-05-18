@@ -12,7 +12,7 @@ const validation = require('../utilities').validation
 let isStringProvided = validation.isStringProvided
 
 router.get("/:memberId", (request,response, next) => {
-    if (request.param.memberId === undefined){
+    if (request.params.memberId === undefined){
         response.status(400).send({
             message: "Missing required information"
         })
@@ -31,7 +31,7 @@ router.get("/:memberId", (request,response, next) => {
     pool.query(query, values)
     .then(result => {
         response.send({
-            rowCount = result.rowCount,
+            rowCount: result.rowCount,
             rows: result.rows
         })
     }).catch(err => {
