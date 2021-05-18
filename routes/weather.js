@@ -26,14 +26,14 @@ router.get("/weather", (req, res) => {
 
     //An example of the call made using the One Call API.
     //https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}
-    let url = `https://api.openweathermap.org/data/2.5/onecall?&appid={API_KEY}`
+    //let url = `https://api.openweathermap.org/data/2.5/onecall?&appid={API_KEY}`
     
-    //find the query string (parameters) sent to this end point and pass them on to
-    // OpenWeatherMap api call 
-    let n = req.originalUrl.indexOf('?') + 1
-    if(n > 0) {
-        url += '&' + req.originalUrl.substring(n)
-    }
+    // //find the query string (parameters) sent to this end point and pass them on to
+    // // OpenWeatherMap api call 
+    // let n = req.originalUrl.indexOf('?') + 1
+    // if(n > 0) {
+    //     url += '&' + req.originalUrl.substring(n)
+    // }
 
     //Retrieve data from query params
     const lon = request.body.lon
@@ -41,7 +41,7 @@ router.get("/weather", (req, res) => {
     const exclude = request.body.exclude
     const units = request.body.units
 
-    //I guess I can hardcode the url. Needs checking for correctness and whether this string, while not a string literal, is fine.
+    //Needs checking for correctness and whether this string, while not a string literal, is fine.
     let url = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=" + exclude + "&units=" + units +"&appid=" + API_KEY
 
     /*What this code above is doing is that it is taking the URL from the WeatherViewModel and then extracting the 
