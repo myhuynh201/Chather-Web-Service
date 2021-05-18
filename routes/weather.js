@@ -28,12 +28,6 @@ router.get("/weather", (req, res) => {
     //https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}
     //let url = `https://api.openweathermap.org/data/2.5/onecall?&appid={API_KEY}`
     
-    // //find the query string (parameters) sent to this end point and pass them on to
-    // // OpenWeatherMap api call 
-    // let n = req.originalUrl.indexOf('?') + 1
-    // if(n > 0) {
-    //     url += '&' + req.originalUrl.substring(n)
-    // }
 
     //Retrieve data from query params
     const lon = request.body.lon
