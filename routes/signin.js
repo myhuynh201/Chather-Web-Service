@@ -94,7 +94,7 @@ router.get('/', (request, response, next) => {
             //Did our salted hash match their salted hash?
             if (storedSaltedHash === providedSaltedHash ) {
 
-                let verifyQuery = "SELECT Verification FROM Members WHERE EMAIL=$1";
+                let verifyQuery = "SELECT Verification, memberid FROM Members WHERE EMAIL=$1";
                 pool.query(verifyQuery, values).then(result => {
                     if(result.rows[0].verification == 1) {
                         //credentials match. get a new JWT

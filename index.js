@@ -32,7 +32,7 @@ app.use("/changePassword", require('./routes/changePassword.js'))
 app.use("/contacts", middleware.checkToken, require('./routes/contacts.js'))
 app.use("/messages", middleware.checkToken, require('./routes/messages'))
 app.use("/chats", middleware.checkToken, require('./routes/chats.js'))
-app.use("/auth", middleware.checkToken, require('./routes/pushyregister'))
+app.use("/auth", middleware.checkToken, require('./routes/pushyregister.js'))
 
 
 
