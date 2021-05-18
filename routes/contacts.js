@@ -88,15 +88,15 @@ router.post("/", (request, response, next) => {
         })
     })
 }, (request, response, next) => {
-    let query = 'SELECT Verified FROM Contacts WHERE (MemberId_A = $1 AND MemberId-B = $2) OR (MemberId_B = $1 AND MemberId_A= $2)'
+    let query = 'SELECT Verified FROM Contacts WHERE (MemberId_A = $1 AND MemberId_B = $2) OR (MemberId_B = $1 AND MemberId_A= $2)'
     let values = [request.body.memberIda, request.body.memberIdb]
 
     pool.query(query, values)
     .then(result => {
         if(result.rowCount != 0){
-            response.status(400).send{
+            response.status(400).send({
                 message:"Contact already exists. already exists"
-            }
+            })
         } else{
             next()
         }
@@ -128,7 +128,7 @@ router.post("/delete", (request, response, next) => {
         next()
     }
 }, (request, response, next) => {
-    let query = 'SELECT Verified FROM Contacts WHERE (MemberId_A = $1 AND MemberId-B = $2) OR (MemberId_B = $1 AND MemberId_A= $2)'
+    let query = 'SELECT Verified FROM Contacts WHERE (MemberId_A = $1 AND MemberId_B = $2) OR (MemberId_B = $1 AND MemberId_A= $2)'
     let values = [request.body.memberIda, request.body.memberIdb]
 
     pool.query(query, values)
@@ -147,7 +147,7 @@ router.post("/delete", (request, response, next) => {
         })
     })
 }, (request, response) => {
-    let query = 'DELETE FROM Contacts WHERE (MemberId_A = $1 AND MemberId-B = $2) OR (MemberId_B = $1 AND MemberId_A= $2)'
+    let query = 'DELETE FROM Contacts WHERE (MemberId_A = $1 AND MemberId_B = $2) OR (MemberId_B = $1 AND MemberId_A= $2)'
     let values = [request.body.memberIda, request.body.memberIdb]
 
     pool.query(query, values)
