@@ -119,7 +119,7 @@ router.post("/", (request, response, next) => {
 
 
 router.post("/delete", (request, response, next) => {
-    if(request.body.memberIda === undefined || request.body.memberIdb){
+    if(request.body.memberIda === undefined || request.body.memberIdb === undefined){
         response.status(400).send({
             message: "Missing memberida or memberidb."
         })
