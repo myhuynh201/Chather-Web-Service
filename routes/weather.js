@@ -62,10 +62,10 @@ router.get("/", (req, res) => {
 })
 
 router.get("/hardcoded", (req, res) => {
-    const exclude = req.body.exclude
-    const units = req.body.units
+    //const exclude = req.body.exclude
+    //const units = req.body.units
 
-    let url = "https://api.openweathermap.org/data/2.5/onecall?lat=" + 47.24 + "&lon=" + -122.43 + "&exclude=" + exclude + "&units=" + units +"&appid=" + API_KEY
+    let url = "https://api.openweathermap.org/data/2.5/onecall?lat=" + 47.24 + "&lon=" + -122.43 + "&exclude=" + "minutely,alerts" + "&units=" + "imperial" +"&appid=" + API_KEY
 
     request(url, function (error, response, body) {
         if (error) {
