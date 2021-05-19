@@ -59,7 +59,7 @@ router.post("/", (request, response, next) => {
             message: "Missing memberID a or Missing memberID b."
         })
     }
-    else if(isNan(request.body.memberIda) || isNan(request.body.memberIdb)){
+    else if(isNaN(request.body.memberIda) || isNaN(request.body.memberIdb)){
         response.status(400).send({
             message: "MemberID's must be a number."
         })
