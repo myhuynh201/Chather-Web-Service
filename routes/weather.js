@@ -35,6 +35,7 @@ router.get("/", (req, res) => {
     const exclude = req.body.exclude
     const units = req.body.units
 
+    console.log(`${lat}<LAT, ${lon}<LON`)
     //Needs checking for correctness and whether this string, while not a string literal, is fine.
     let url = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=" + exclude + "&units=" + units +"&appid=" + API_KEY
 
@@ -50,6 +51,26 @@ router.get("/", (req, res) => {
             // res.send(response);
             
             // or just pass on the body
+
+            var n = body.indexOf("{")
+            var nakidBody = body.substring(n - 1)
+
+            res.send(nakidBody)
+        }
+    })
+
+})
+
+router.get("/hardcoded", (req, res) => {
+    const exclude = req.body.exclude
+    const units = req.body.units
+
+    let url = "https://api.openweathermap.org/data/2.5/onecall?lat=" + 47.24 + "&lon=" + -122.43 + "&exclude=" + exclude + "&units=" + units +"&appid=" + API_KEY
+
+    request(url, function (error, response, body) {
+        if (error) {
+            res.send(error)
+        } else {
 
             var n = body.indexOf("{")
             var nakidBody = body.substring(n - 1)
