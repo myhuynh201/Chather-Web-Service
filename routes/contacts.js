@@ -33,7 +33,7 @@ router.get("/:memberId", (request,response, next) => {
         next()
     }
 }, (request, response) => {
-    let query = "SELECT Username, MemberID FROM Members WHERE MemberID != $1 AND (MemberID IN (SELECT MemberID_A FROM CONTACTS WHERE MemberID_B = $1) OR MemberID IN (SELECT MemberID_B FROM CONTACTS WHERE MemberID_A = $1))" 
+    let query = "SELECT Username, FirstName, LastName, MemberID FROM Members WHERE MemberID != $1 AND (MemberID IN (SELECT MemberID_A FROM CONTACTS WHERE MemberID_B = $1) OR MemberID IN (SELECT MemberID_B FROM CONTACTS WHERE MemberID_A = $1))" 
     let values = [request.params.memberId]
     pool.query(query, values)
     .then(result => {
@@ -163,9 +163,10 @@ router.post("/delete", (request, response, next) => {
     })
 })
 
+/** 
 /**
  * @api
- */
+ 
 router.post("/newchat", (request, response, next) => {
     if(isStringProvided(request.body.memberIda) && isStringProvided(request.body.memberIdb)){
         next()
@@ -198,6 +199,10 @@ router.post("/newchat", (request, response, next) => {
             })
         }
     })
+}, (request, response, next) => {
+    let query = "SELECT ChatID FROM ChatMembers WHERE ChatID = (SELECT COUNT(ChatID) FROM ChatMembers WHERE ChatID = (SELECT "
 }
 )
+
+*/
 module.exports = router
