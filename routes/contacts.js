@@ -18,13 +18,13 @@ let isStringProvided = validation.isStringProvided
  * 
  * @apiDescription Requests all of the usernames of the 
  */
-router.get("/:memberId", (request,response, next) => {
-    if (request.params.memberId === undefined){
+router.get("/get", (request,response, next) => {
+    if (request.decoded.memberid === undefined){
         response.status(400).send({
             message: "Missing required information"
         })
     }
-    else if (isNaN(request.params.memberId)){
+    else if (isNaN(request.decoded.memberId)){
         response.status(400).send({
             message: "memberId should be a number."
         })
@@ -34,7 +34,7 @@ router.get("/:memberId", (request,response, next) => {
     }
 }, (request, response) => {
     let query = "SELECT Username, FirstName, LastName, MemberID FROM Members WHERE MemberID != $1 AND (MemberID IN (SELECT MemberID_A FROM CONTACTS WHERE MemberID_B = $1) OR MemberID IN (SELECT MemberID_B FROM CONTACTS WHERE MemberID_A = $1))" 
-    let values = [request.params.memberId]
+    let values = [request.decoded.memberid]
     pool.query(query, values)
     .then(result => {
         response.send({
