@@ -53,7 +53,7 @@ router.get("/:memberId", (request,response, next) => {
 /**
  * @api {post} /contacts/:memberIda?/:memberIdb? 
  */
-router.post("/", (request, response, next) => {
+router.post("/create", (request, response, next) => {
     if(request.body.memberIda === undefined || request.body.memberIdb === undefined){
         response.status(400).send({
             message: "Missing memberID a or Missing memberID b."
@@ -163,5 +163,41 @@ router.post("/delete", (request, response, next) => {
     })
 })
 
-
+/**
+ * @api
+ */
+router.post("/newchat", (request, response, next) => {
+    if(isStringProvided(request.body.memberIda) && isStringProvided(request.body.memberIdb)){
+        next()
+    }
+    else{
+        response.status(400).send({
+            message: "Missing member id a or member id b"
+        })
+    }
+}, (request, response, next) => {
+    if(isNaN(memberIda) || isNaN(memberIdb)){
+        response.status(400).send({
+            message: "Member ids must be numbers."
+        })
+    }
+    else{
+        next()
+    }
+}, (request, response, next) => {
+    let query = "SELECT Username FROM Members WHERE MemberID = $1 OR MemberID = $2"
+    let values = [request.body.memberIda, request.body.memberIdb]
+    pool.query(query, values)
+    .then(result => {
+        if(result.rowCount == 2){
+            next()
+        }
+        else{
+            response.status(400).send({
+                message: "One or both of the members do not exist."
+            })
+        }
+    })
+}
+)
 module.exports = router
