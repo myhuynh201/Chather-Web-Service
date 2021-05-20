@@ -25,7 +25,7 @@ router.get("/get", (request,response, next) => {
         })
         console.log("Not getting corrrect info")
     }
-    else if (isNaN(request.decoded.memberId)){
+    else if (isNaN(request.decoded.memberid)){
         response.status(400).send({
             message: "memberId should be a number."
         })
