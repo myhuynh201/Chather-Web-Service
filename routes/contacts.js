@@ -23,11 +23,13 @@ router.get("/get", (request,response, next) => {
         response.status(400).send({
             message: "Missing required information"
         })
+        console.log("Not getting corrrect info")
     }
     else if (isNaN(request.decoded.memberId)){
         response.status(400).send({
             message: "memberId should be a number."
         })
+        console.log("something is not a number")
     }
     else{
         next()
@@ -46,6 +48,7 @@ router.get("/get", (request,response, next) => {
             message: "SQL Error",
             error: err
         })
+        console.log("Some sort of sql error")
     })
 });
 
