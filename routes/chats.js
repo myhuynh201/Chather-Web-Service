@@ -65,14 +65,14 @@ router.post("/", (request, response, next) => {
 })
 
 /**
- * @api {get} /chats/member Request to get the chats a user belongs to
+ * @api {get} /chats/member Request to get the chats a member belongs to
  * @apiName GetChatsForUser
  * @apiGroup Chats
  * 
  * @apiHeader {String} authorization Valid JSON Web Token JWT
  *  * 
  * @apiSuccess {Number} rowCount the number of chatrooms returned
- * @apiSuccess {Object[]} members List of chatrooms for the user
+ * @apiSuccess {Object[]} chatrooms List of chatrooms for the user
  * 
  * @apiError (404: MemberId Not Found) {String} message "Member ID Not Found"
  * @apiError (400: Invalid Parameter) {String} message "Malformed parameter. chatId must be a number" 

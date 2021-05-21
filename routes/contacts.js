@@ -12,11 +12,11 @@ const validation = require('../utilities').validation
 let isStringProvided = validation.isStringProvided
 
 /**
- * @api {get} /contacts/:memberId
+ * @api {get} /contacts/:memberId Get contacts for a given memberid
  * @apiName GetContacts
  * @apiGroup Contacts
  * 
- * @apiDescription Requests all of the usernames of the 
+ * @apiDescription Requests all of the usernames of the contacts for a member
  */
 router.get("/get", (request,response, next) => {
     if (request.decoded.memberid === undefined){
@@ -54,7 +54,11 @@ router.get("/get", (request,response, next) => {
 
 
 /**
- * @api {post} /contacts/:memberIda?/:memberIdb? 
+ * @api {post} /contacts/create Add a contact to the current member
+ * @apiName Create Contact
+ * @apiGroup Contacts
+ * 
+ * @apiDescription Given two memberid's, add the two members as contacts
  */
 router.post("/create", (request, response, next) => {
     if(request.body.memberIda === undefined || request.body.memberIdb === undefined){
@@ -120,7 +124,13 @@ router.post("/create", (request, response, next) => {
     })
 })
 
-
+/**
+ * @api {delete} /contacts/delete Delete a contact from the current member's contacts list
+ * @apiName Delete Contact
+ * @apiGroup Contacts
+ * 
+ * @apiDescription Given two memberid's, remove the two members as contacts
+ */
 router.post("/delete", (request, response, next) => {
     if(request.body.memberIda === undefined || request.body.memberIdb === undefined){
         response.status(400).send({
@@ -166,10 +176,8 @@ router.post("/delete", (request, response, next) => {
     })
 })
 
-/** 
-/**
- * @api
- 
+/* 
+
 router.post("/newchat", (request, response, next) => {
     if(isStringProvided(request.body.memberIda) && isStringProvided(request.body.memberIdb)){
         next()
