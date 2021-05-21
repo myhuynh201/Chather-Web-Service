@@ -50,9 +50,6 @@ router.post('/', (request, response) => {
 
     if (request.body.name && request.body.password && request.body.password2 && request.body.password === request.body.password2) {
 
-        console.log(request.body.name);
-        console.log(request.body.password);
-        console.log(request.body.password2);
 
         let decoded = jwt.decode(request.body.name);
         console.log(decoded.email)
