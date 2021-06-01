@@ -97,7 +97,7 @@ router.post("/", (request, response, next) => {
     }
 },  (request, response, next) => {
     //validate chat id exists
-    let query = 'SELECT * FROM chatmembers WHERE memberId=$1'
+    let query = 'SELECT chatmembers.memberid, chatid, username FROM chatmembers LEFT JOIN members ON chatmembers.memberid=members.memberid WHERE chatmembers.chatid IN (SELECT chatid FROM chatmembers WHERE memberid=$1) ORDER BY chatid'
     let values = [request.decoded.memberid]
 
     pool.query(query, values)
