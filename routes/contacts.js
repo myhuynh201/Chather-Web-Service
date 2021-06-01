@@ -12,29 +12,31 @@ const validation = require('../utilities').validation
 let isStringProvided = validation.isStringProvided
 
 /**
- * @api {get} /contacts/:memberId
+ * @api {get} /contacts/:memberId Get contacts for a given memberid
  * @apiName GetContacts
  * @apiGroup Contacts
  * 
- * @apiDescription Requests all of the usernames of the 
+ * @apiDescription Requests all of the usernames of the contacts for a member
  */
-router.get("/:memberId", (request,response, next) => {
-    if (request.params.memberId === undefined){
+router.get("/get", (request,response, next) => {
+    if (request.decoded.memberid === undefined){
         response.status(400).send({
             message: "Missing required information"
         })
+        console.log("Not getting corrrect info")
     }
-    else if (isNaN(request.params.memberId)){
+    else if (isNaN(request.decoded.memberid)){
         response.status(400).send({
             message: "memberId should be a number."
         })
+        console.log("something is not a number")
     }
     else{
         next()
     }
 }, (request, response) => {
-    let query = "SELECT Username, MemberID FROM Members WHERE MemberID != $1 AND (MemberID IN (SELECT MemberID_A FROM CONTACTS WHERE MemberID_B = $1) OR MemberID IN (SELECT MemberID_B FROM CONTACTS WHERE MemberID_A = $1))" 
-    let values = [request.params.memberId]
+    let query = "SELECT Username, FirstName, LastName, MemberID FROM Members WHERE MemberID != $1 AND (MemberID IN (SELECT MemberID_A FROM CONTACTS WHERE MemberID_B = $1) OR MemberID IN (SELECT MemberID_B FROM CONTACTS WHERE MemberID_A = $1))" 
+    let values = [request.decoded.memberid]
     pool.query(query, values)
     .then(result => {
         response.send({
@@ -46,14 +48,19 @@ router.get("/:memberId", (request,response, next) => {
             message: "SQL Error",
             error: err
         })
+        console.log("Some sort of sql error")
     })
 });
 
 
 /**
- * @api {post} /contacts/:memberIda?/:memberIdb? 
+ * @api {post} /contacts/create Add a contact to the current member
+ * @apiName Create Contact
+ * @apiGroup Contacts
+ * 
+ * @apiDescription Given two memberid's, add the two members as contacts
  */
-router.post("/", (request, response, next) => {
+router.post("/create", (request, response, next) => {
     if(request.body.memberIda === undefined || request.body.memberIdb === undefined){
         response.status(400).send({
             message: "Missing memberID a or Missing memberID b."
@@ -117,7 +124,13 @@ router.post("/", (request, response, next) => {
     })
 })
 
-
+/**
+ * @api {delete} /contacts/delete Delete a contact from the current member's contacts list
+ * @apiName Delete Contact
+ * @apiGroup Contacts
+ * 
+ * @apiDescription Given two memberid's, remove the two members as contacts
+ */
 router.post("/delete", (request, response, next) => {
     if(request.body.memberIda === undefined || request.body.memberIdb === undefined){
         response.status(400).send({
@@ -163,5 +176,44 @@ router.post("/delete", (request, response, next) => {
     })
 })
 
+/* 
 
+router.post("/newchat", (request, response, next) => {
+    if(isStringProvided(request.body.memberIda) && isStringProvided(request.body.memberIdb)){
+        next()
+    }
+    else{
+        response.status(400).send({
+            message: "Missing member id a or member id b"
+        })
+    }
+}, (request, response, next) => {
+    if(isNaN(memberIda) || isNaN(memberIdb)){
+        response.status(400).send({
+            message: "Member ids must be numbers."
+        })
+    }
+    else{
+        next()
+    }
+}, (request, response, next) => {
+    let query = "SELECT Username FROM Members WHERE MemberID = $1 OR MemberID = $2"
+    let values = [request.body.memberIda, request.body.memberIdb]
+    pool.query(query, values)
+    .then(result => {
+        if(result.rowCount == 2){
+            next()
+        }
+        else{
+            response.status(400).send({
+                message: "One or both of the members do not exist."
+            })
+        }
+    })
+}, (request, response, next) => {
+    let query = "SELECT ChatID FROM ChatMembers WHERE ChatID = (SELECT COUNT(ChatID) FROM ChatMembers WHERE ChatID = (SELECT "
+}
+)
+
+*/
 module.exports = router

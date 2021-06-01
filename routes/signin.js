@@ -94,14 +94,15 @@ router.get('/', (request, response, next) => {
             //Did our salted hash match their salted hash?
             if (storedSaltedHash === providedSaltedHash ) {
 
-                let verifyQuery = "SELECT Verification, memberid FROM Members WHERE EMAIL=$1";
+                let verifyQuery = "SELECT Verification, memberid, username FROM Members WHERE EMAIL=$1";
                 pool.query(verifyQuery, values).then(result => {
                     if(result.rows[0].verification == 1) {
                         //credentials match. get a new JWT
                         let token = jwt.sign(
                             {
                                 "email": request.auth.email,
-                                "memberid": result.rows[0].memberid
+                                "memberid": result.rows[0].memberid,
+                                "username": result.rows[0].username
                             },
                             config.secret,
                             { 
@@ -112,7 +113,9 @@ router.get('/', (request, response, next) => {
                         response.json({
                         success: true,
                         message: 'Authentication successful!',
-                        token: token
+                        token: token,
+                        username: result.rows[0].username,
+                        memberid: result.rows[0].memberid
                         });
 
                     } else {

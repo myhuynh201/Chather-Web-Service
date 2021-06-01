@@ -57,10 +57,6 @@ router.post('/', (request, response) => {
     const newPW = request.body.newPW;
     const confirmPW = request.body.confirmPW;
 
-    console.log(email);
-    console.log(oldPW);
-    console.log(newPW);
-    console.log(confirmPW);
 
     if (isStringProvided(oldPW) && isStringProvided(newPW) && isStringProvided(confirmPW)) {
         if(isValidPassword(newPW)) {
