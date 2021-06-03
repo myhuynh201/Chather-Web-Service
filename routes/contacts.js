@@ -116,7 +116,7 @@ router.post("/create", (request, response, next) => {
  */
 router.post("/delete", (request, response, next) => {
     if(request.params.memberid === undefined){
-        response.status(400).send({
+        response.status(401).send({
             message: "Missing memberid."
         })
     }
@@ -130,7 +130,7 @@ router.post("/delete", (request, response, next) => {
     pool.query(query, values)
     .then(result => {
         if(result.rowCount == 0){
-            response.status(400).send({
+            response.status(402).send({
                 message: "There is no contact with these members."
             })
         }
@@ -138,7 +138,7 @@ router.post("/delete", (request, response, next) => {
             next()
         }
     }).catch(error => {
-        response.status(400).send({
+        response.status(403).send({
             message: "SQL Error on searching for the contact"
         })
     })
@@ -152,7 +152,7 @@ router.post("/delete", (request, response, next) => {
             message: "Contact deleted."
         })
     }).catch(error => {
-        response.status(400).send({
+        response.status(404).send({
             message: "SQL error on deleting the contact.",
             error: error
         })
