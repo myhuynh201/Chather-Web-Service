@@ -46,5 +46,5 @@ function sendContactRequestToIndividual(token, message) {
     })
 }
 module.exports = {
-    sendMessageToIndividual
+    sendMessageToIndividual, sendContactRequestToIndividual
 }
