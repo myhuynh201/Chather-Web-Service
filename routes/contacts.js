@@ -58,48 +58,16 @@ router.post("/create", (request, response, next) => {
     else {
         next()
     }
-}, (request, respone, next ) =>{
-    let query = 'SELECT Username FROM Members WHERE MemberID = $1'
-    let values = [request.headers.memberid]
-    pool.query(query, values)
-    .then(result=>{
-        if(result.rowCount !=1){
-            response.status(403).send({
-                message:"Members not found."
-            })
-        }
-        else{
-            next()
-        }
-    }).catch(error=>{
-        response.status(404).send({
-            message: "SQL Error on memberid check",
-            error: error
-        })
-    })
-}, (request, response, next) => {
-    let query = 'SELECT Verified FROM Contacts WHERE (MemberId_A = $1 AND MemberId_B = $2)'
-    let values = [request.decoded.memberid, request.headers.memberid]
-
-    pool.query(query, values)
-    .then(result => {
-        if(result.rowCount != 0){
-            response.status(405).send({
-                message:"Contact already exists. already exists"
-            })
-        } else{
-            next()
-        }
-    }).catch(err => {
-        response.status(406).send({
-            message:"SQL Error on contact verification check"
-        })
-    })
 }, (request, response) => {
     let query = "INSERT INTO Contacts(MemberID_A, MemberID_B) VALUES ($1, $2)"
     let values = [request.decoded.memberid, request.headers.memberid]
 
     pool.query(query, values)
+    .then( result =>
+        response.status(200).send({
+            message: "Contact created."
+        })
+        )
     .catch(err => {
         response.status(407).send({
             message:"SQL Error on insert."
