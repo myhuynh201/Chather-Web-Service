@@ -94,7 +94,7 @@ let isStringProvided = validation.isStringProvided
                 })
             } else {
                 console.log("creating new chat...")
-                let insertQuery = `INSERT INTO Chats(Name) VALUES ('${members}') RETURNING ChatId`
+                let insertQuery = `INSERT INTO Chats(Name) VALUES (${members[0].join("', '")}) RETURNING ChatId`
                 console.log(insertQuery)
 
                 pool.query(insertQuery)
@@ -129,12 +129,12 @@ let isStringProvided = validation.isStringProvided
                                 query: addMembersQuery
                             })
                         })
-                    }).catch(err => {
+                    }).catch(erro => {
                         console.log("error: inserting new chat...")
 
                         response.status(400).send({
                             message: "SQL Error",
-                            error: err,
+                            error: erro,
                             query: insertQuery
                         })
                    })            
