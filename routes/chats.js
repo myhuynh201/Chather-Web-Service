@@ -46,10 +46,39 @@ let isStringProvided = validation.isStringProvided
     } else {
         next()
     }
+    },(request, response, next)=>{
+        let members = [request.body.members]
+        let membersExistQuery = `SELECT memberid, username FROM members WHERE username IN ('${members[0].join("', '")}')`
+        console.log(membersExistQuery)
+        pool.query(membersExistQuery)
+        .then(result => {
+            inputCount = members[0].length
+            queryCount = result.rowCount
+            if (inputCount == queryCount) {
+                console.log("all members found!") 
+                console.log(inputCount + " found out of " + queryCount)
+                next()
+            } else {
+                console.log(inputCount + " found out of " + queryCount)
+
+                response.status(400).send({
+                    message: `Not all members are found. Only found ${result.rows}`,
+                })
+            }
+        })
+        .catch(error=> {
+            console.log("error: problem finding members")
+
+            response.status(400).send({
+                message: "SQL Error",
+                error: error,
+                query: query
+            })
+        }) 
     }, (request, response, next) => {
         //validate chat id exists
         let members = [request.body.members]
-        let query = `SELECT chatmembers.chatid, chatmembers.memberid, members.username FROM chatmembers LEFT JOIN members ON chatmembers.memberid=members.memberid WHERE members.username IN ('${members[0].join("', '")}') AND chatmembers.chatid NOT IN (SELECT chatmembers.chatid FROM chatmembers LEFT JOIN members ON chatmembers.memberid=members.memberid WHERE members.username NOT IN ('${members[0].join("', '")}'))`
+        let query = `SELECT chatmembers.*, members.username FROM chatmembers LEFT JOIN members ON chatmembers.memberid=members.memberid WHERE members.username IN ('${members[0].join("', '")}') AND chatmembers.chatid NOT IN (SELECT chatmembers.chatid FROM chatmembers LEFT JOIN members ON chatmembers.memberid=members.memberid WHERE members.username NOT IN ('${members[0].join("', '")}'));`
         // if chat containing all members exists return chat
         pool.query(query)
         .then(result => {
@@ -64,7 +93,6 @@ let isStringProvided = validation.isStringProvided
                 })
             } else {
                 console.log("creating new chat...")
-
                 let insertQuery = `INSERT INTO Chats(Name) VALUES ('${members}') RETURNING ChatId`
                 pool.query(insertQuery)
                     .then(result => {
