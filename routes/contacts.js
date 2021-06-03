@@ -28,6 +28,7 @@ router.get("/get", (request,response, next) => {
         response.send({
             rows:result.rows
         })
+        console.log(rows)
     })
     .catch(error => {
         response.status(400).send({
