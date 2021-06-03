@@ -10,6 +10,7 @@ const msg_functions = require('../utilities/exports').messaging
 
 const validation = require('../utilities').validation
 let isStringProvided = validation.isStringProvided
+let isValidEmail = validation.isValidEmail
 
 /**
  * @api {get} /contacts/:memberId Get contacts for a given memberid
@@ -231,22 +232,22 @@ router.post("/1v1chat", (request, response, next) => {
  */
 router.get("/search", (request, response, next) => 
 {
-    console.log(request.body.searchParam)
-    if(request.body.searchParam === undefined)
-    {
-        next()
-    }
-    else
+    console.log(request.params.searchP)
+    if(request.params.searchP === undefined)
     {
         response.status(420).send({
             message: "Need a search parameter."
         })
     }
+    else
+    {
+        next()
+    }
 }, (request, response) => {
-        if(isValidEmail(request.body.searchParam))
+        if(isValidEmail(request.params.searchP))
         {
             let query = "SELECT MemberID, Username FROM Members WHERE Email = $1 AND NOT EXISTS (SELECT PrimaryKey FROM Contacts WHERE (MemberID_A = $1 AND MemberID_B = $2) OR (MemberID_A = $2 AND MemberID_B = $1) ) "
-            let values = [request.body.searchParam, request.decoded.memberid]
+            let values = [request.params.searchP, request.decoded.memberid]
             pool.query(query,values)
             .then(result =>
                 {
@@ -264,7 +265,7 @@ router.get("/search", (request, response, next) =>
     else
     {
         let query = "SELECT MemberID, Username FROM Members WHERE Username = $1 AND NOT EXISTS (SELECT PrimaryKey FROM Contacts WHERE (MemberID_A = $1 AND MemberID_B = $2) OR (MemberID_A = $2 AND MemberID_B = $1)"
-        let values = [request.body.searchParam, request.decoded.memberid]
+        let values = [request.params.searchP, request.decoded.memberid]
         pool.query(query,values)
         .then(result =>
             {
