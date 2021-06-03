@@ -247,7 +247,7 @@ router.get("/search", (request, response, next) =>
 }, (request, response) => {
         if(isValidEmail(request.headers.searchp))
         {
-            let query = "SELECT MemberID, Username FROM Members WHERE Email = $1 AND MemberID NOT IN (SELECT MemberID_A FROM Contacts WHERE MemberID_B = $2) AND MemberID NOT IN (SELECT MemberID_B FROM Contacts WHERE MemberID_A = $2))"
+            let query = "SELECT MemberID, Username FROM Members WHERE Email = $1 AND MemberID NOT IN (SELECT MemberID_A FROM Contacts WHERE MemberID_B = $2) AND MemberID NOT IN (SELECT MemberID_B FROM Contacts WHERE MemberID_A = $2)"
             let values = [request.headers.searchp, request.decoded.memberid]
             pool.query(query,values)
             .then(result =>
@@ -265,7 +265,7 @@ router.get("/search", (request, response, next) =>
     }
     else
     {
-        let query = "SELECT MemberID, Username FROM Members WHERE Username = $1 AND MemberID NOT IN (SELECT MemberID_A FROM Contacts WHERE MemberID_B = $2) AND MemberID NOT IN (SELECT MemberID_B FROM Contacts WHERE MemberID_A = $2))"
+        let query = "SELECT MemberID, Username FROM Members WHERE Username = $1 AND MemberID NOT IN (SELECT MemberID_A FROM Contacts WHERE MemberID_B = $2) AND MemberID NOT IN (SELECT MemberID_B FROM Contacts WHERE MemberID_A = $2)"
         let values = [request.headers.searchp, request.decoded.memberid]
         pool.query(query,values)
         .then(result =>
