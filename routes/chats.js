@@ -10,6 +10,120 @@ const validation = require('../utilities').validation
 let isStringProvided = validation.isStringProvided
 
 /**
+ * @api {put} /chats/newChat Create a new chat with given members
+ * @apiName New Chat
+ * @apiGroup Chats
+ * 
+ * @apiDescription Create a new chat and insert sender and recipient members. 
+ * 
+ * @apiHeader {String} authorization Valid JSON Web Token JWT
+ * 
+ * @apiParam {JSONArray} otherMembers Recipient(s) of the new chat
+ * 
+ * @apiSuccess {boolean} success true when the name is inserted
+ * 
+ * @apiError (404: Chat Not Found) {String} message "chatID not found"
+ * @apiError (404: Email Not Found) {String} message "email not found"
+ * @apiError (400: Invalid Parameter) {String} message "Malformed parameter. chatId must be a number" 
+ * @apiError (400: Duplicate Email) {String} message "user already joined"
+ * @apiError (400: Missing Parameters) {String} message "Missing required information"
+ * 
+ * @apiError (400: SQL Error) {String} message the reported SQL error details
+ * 
+ * @apiUse JSONError
+ */ 
+ router.put("/startChat", (request, response, next) => {
+    //validate on empty parameters
+    let members = [request.body.otherMembers]
+    if (!request.body.otherMembers) {
+        response.status(400).send({
+            message: "Missing required information"
+        })
+    } else if (members.length < 1) {
+        response.status(400).send({
+            message: "Malformed parameter. Must send at least one member"
+        })
+    } else {
+        next()
+    }
+    }, (request, response, next) => {
+        //validate chat id exists
+        let members = [request.body.otherMembers]
+        let query = 'SELECT * FROM chatmembers WHERE memberid IN ('+ members +') AND chatid NOT IN (SELECT chatid FROM chatmembers WHERE memberid NOT IN ('+ members +'))'
+        console.log(query);
+        // if chat containing all members exists return chat
+        pool.query(query)
+        .then(result => {
+            console.log(result.rowCount + " : " +result.rows)
+            if (result.rowCount > 0) {
+                console.log("found!!")
+
+                response.send({
+                    success: 'Chat Exists',
+                    chatID:result.rows[0].chatid
+                })
+            } else {
+                console.log("creating new chat...")
+
+                let insertQuery = `INSERT INTO Chats(Name) VALUES ('${members}') RETURNING ChatId`
+                pool.query(insertQuery)
+                    .then(result => {
+                        console.log("inserted chat..." + result.rows[0].chatid)
+                        
+                        let chatid = result.rows[0].chatid
+                        console.log(members + " : " + members[0][0])
+                        var addMembersQuery = `INSERT INTO chatmembers (ChatId, MemberId) VALUES (${chatid},${members[0][0]})`
+                        for (i = 1; i < members.length; i++) {
+                            console.log('chatid: ' + chatid + ', memberids'+ members[0][i])
+                            addMembersQuery += `, (${chatid},${members[0][i]})`
+                        }
+
+                        console.log(addMembersQuery)
+                        pool.query(addMembersQuery)
+                        .then(result => {
+                            console.log("created chat and added members...")
+
+                            response.send({
+                                success: 'Chat created',
+                                chatID:chatid
+                            })
+                        }).catch(err => {
+                            console.log("error: adding members to new chat...")
+
+                            response.status(400).send({
+                                message: "SQL Error",
+                                error: err,
+                                query: addMembersQuery
+                            })
+                        })
+                    }).catch(err => {
+                        console.log("error: inserting new chat...")
+
+                        response.status(400).send({
+                            message: "SQL Error",
+                            error: err,
+                            query: insertQuery
+                        })
+                   })            
+            }
+        }).catch(error => {
+            console.log("error: 0 rowcount...")
+
+            response.status(400).send({
+                message: "SQL Error",
+                error: error,
+                query: query
+            })
+        });
+        // if chat does not exist, create new chat
+
+        // add all members to chat
+
+        'SELECT * FROM chatmembers WHERE memberid IN (36, 172) AND memberid NOT IN (SELECT memberid FROM chatmembers WHERE memberid NOT IN (36, 172));'
+    }
+)
+
+/**
  * @apiDefine JSONError
  * @apiError (400: JSON Error) {String} message "malformed JSON in parameters"
  */ 
@@ -440,6 +554,7 @@ router.delete("/:chatId/:email", (request, response, next) => {
         })
     }
 )
+
 
 
 
