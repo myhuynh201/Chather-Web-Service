@@ -233,7 +233,7 @@ router.post("/1v1chat", (request, response, next) => {
 router.get("/search", (request, response, next) => 
 {
     
-    console.log(request.headers.searchP)
+    console.log(request.headers)
     if(request.headers.searchP === undefined)
     {
         response.status(420).send({
