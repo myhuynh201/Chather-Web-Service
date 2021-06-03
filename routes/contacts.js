@@ -19,7 +19,7 @@ let isValidEmail = validation.isValidEmail
  * 
  * @apiDescription Requests all of the usernames of the contacts for a member
  */
-router.get("/get", (request,response, next) => {
+router.get("/get", (request,response) => {
     let query = "SELECT MemberID, FirstName, LastName, Username FROM Members WHERE MemberID IN (SELECT MemberID_A FROM Contacts WHERE MemberID_B = $1 AND Verified = 1) OR MemberID IN (SELECT MemberID_B FROM Contacts WHERE MemberID_A = $1 AND Verified = 1)"
     let values = [request.decoded.memberid]
     console.log(request.decoded.memberid)
@@ -28,7 +28,6 @@ router.get("/get", (request,response, next) => {
         response.send({
             rows:result.rows
         })
-        console.log(rows)
     })
     .catch(error => {
         response.status(400).send({
