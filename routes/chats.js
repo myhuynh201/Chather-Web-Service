@@ -32,6 +32,8 @@ let isStringProvided = validation.isStringProvided
  * 
  * @apiUse JSONError
  */ 
+
+memberidlist = []
  router.put("/startChat/usernames", (request, response, next) => {
     //validate on empty parameters
     let members = [request.body.members]
@@ -57,22 +59,21 @@ let isStringProvided = validation.isStringProvided
             if (inputCount == queryCount) {
                 console.log("all members found!") 
                 console.log(queryCount + " found out of " + inputCount)
+                memberidlist = result.rows
                 next()
             } else {
                 console.log(queryCount + " found out of " + inputCount)
-
                 response.status(400).send({
                     message: `Not all members are found. Only found ${result.rows}`,
                 })
             }
-        })
-        .catch(error=> {
+        }).catch(error=> {
             console.log("error: problem finding members")
 
             response.status(400).send({
                 message: "SQL Error",
                 error: error,
-                query: query
+                query: membersExistQuery
             })
         }) 
     }, (request, response, next) => {
@@ -92,21 +93,21 @@ let isStringProvided = validation.isStringProvided
                     chatID:result.rows[0].chatid,
                     members: members[0]
                 })
-            } else {
-                console.log("creating new chat...")
-                let insertQuery = `INSERT INTO Chats(Name) VALUES (${members[0].join("', '")}) RETURNING ChatId`
+            }
+        }).catch(error => {
+            console.log("creating new chat...")
+                let insertQuery = `INSERT INTO Chats(Name) VALUES (\'${members[0]}\') RETURNING ChatId`
                 console.log(insertQuery)
 
                 pool.query(insertQuery)
                     .then(result => {
                         console.log("inserted chat..." + result.rows[0].chatid)
-                        
                         let chatid = result.rows[0].chatid
-                        console.log(members + " : " + members[0][0])
-                        var addMembersQuery = `INSERT INTO chatmembers (ChatId, MemberId) VALUES (${chatid},${members[0][0]})`
-                        for (i = 1; i < members.length; i++) {
-                            console.log('chatid: ' + chatid + ', memberids'+ members[0][i])
-                            addMembersQuery += `, (${chatid},${members[0][i]})`
+                        console.log(members + " : " + members[0] + "____" + memberidlist)
+                        var addMembersQuery = `INSERT INTO chatmembers (ChatId, MemberId) VALUES (${chatid},\'${memberidlist[0].memberid}\')`
+                        for (i = 1; i < memberidlist.length; i++) {
+                            console.log('chatid: ' + chatid + ', memberids'+ memberidlist[i].memberid)
+                            addMembersQuery += `, (${chatid},${memberidlist[i].memberid})`
                         }
 
                         console.log(addMembersQuery)
@@ -138,21 +139,10 @@ let isStringProvided = validation.isStringProvided
                             query: insertQuery
                         })
                    })            
-            }
-        }).catch(error => {
-            console.log("error: 0 rowcount...")
-
-            response.status(400).send({
-                message: "SQL Error",
-                error: error,
-                query: query
-            })
         });
         // if chat does not exist, create new chat
 
         // add all members to chat
-
-        'SELECT * FROM chatmembers WHERE memberid IN (36, 172) AND memberid NOT IN (SELECT memberid FROM chatmembers WHERE memberid NOT IN (36, 172));'
     }
 )
 
