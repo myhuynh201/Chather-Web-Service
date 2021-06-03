@@ -56,10 +56,10 @@ let isStringProvided = validation.isStringProvided
             queryCount = result.rowCount
             if (inputCount == queryCount) {
                 console.log("all members found!") 
-                console.log(inputCount + " found out of " + queryCount)
+                console.log(queryCount + " found out of " + inputCount)
                 next()
             } else {
-                console.log(inputCount + " found out of " + queryCount)
+                console.log(queryCount + " found out of " + inputCount)
 
                 response.status(400).send({
                     message: `Not all members are found. Only found ${result.rows}`,
@@ -80,6 +80,7 @@ let isStringProvided = validation.isStringProvided
         let members = [request.body.members]
         let query = `SELECT chatmembers.*, members.username FROM chatmembers LEFT JOIN members ON chatmembers.memberid=members.memberid WHERE members.username IN ('${members[0].join("', '")}') AND chatmembers.chatid NOT IN (SELECT chatmembers.chatid FROM chatmembers LEFT JOIN members ON chatmembers.memberid=members.memberid WHERE members.username NOT IN ('${members[0].join("', '")}'));`
         // if chat containing all members exists return chat
+        console.log(query)
         pool.query(query)
         .then(result => {
             console.log(result.rowCount + " : " + result.rows[0].memberid)
@@ -94,6 +95,8 @@ let isStringProvided = validation.isStringProvided
             } else {
                 console.log("creating new chat...")
                 let insertQuery = `INSERT INTO Chats(Name) VALUES ('${members}') RETURNING ChatId`
+                console.log(insertQuery)
+
                 pool.query(insertQuery)
                     .then(result => {
                         console.log("inserted chat..." + result.rows[0].chatid)
@@ -110,6 +113,7 @@ let isStringProvided = validation.isStringProvided
                         pool.query(addMembersQuery)
                         .then(result => {
                             console.log("created chat and added members...")
+                            console.log(addMembersQuery)
 
                             response.send({
                                 success: 'Chat created',
