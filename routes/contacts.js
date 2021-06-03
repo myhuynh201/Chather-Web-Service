@@ -231,14 +231,15 @@ router.post("/1v1chat", (request, response, next) => {
  */
 router.get("/search", (request, response, next) => 
 {
-    if(isStringProvided(request.body.searchParam))
+    console.log(request.body.searchParam)
+    if(request.body.searchParam === undefined)
     {
         next()
     }
     else
     {
         response.status(420).send({
-            message: "Need a search paramter."
+            message: "Need a search parameter."
         })
     }
 }, (request, response) => {
