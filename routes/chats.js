@@ -49,7 +49,7 @@ let isStringProvided = validation.isStringProvided
     }, (request, response, next) => {
         //validate chat id exists
         let members = [request.body.members]
-        let query = 'SELECT chatmembers.chatid, chatmembers.memberid, members.username FROM chatmembers LEFT JOIN members ON chatmembers.memberid=members.memberid WHERE username IN ('+ members +') AND chatid NOT IN (SELECT chatid FROM chatmembers WHERE username NOT IN ('+ members +'))'
+        let query = `SELECT chatmembers.chatid, chatmembers.memberid, members.username FROM chatmembers LEFT JOIN members ON chatmembers.memberid=members.memberid WHERE members.username IN ('${members[0].join("', '")}') AND chatmembers.chatid NOT IN (SELECT chatmembers.chatid FROM chatmembers LEFT JOIN members ON chatmembers.memberid=members.memberid WHERE members.username NOT IN ('${members[0].join("', '")}'))`
         // if chat containing all members exists return chat
         pool.query(query)
         .then(result => {
@@ -59,7 +59,8 @@ let isStringProvided = validation.isStringProvided
 
                 response.send({
                     success: 'Chat Exists',
-                    chatID:result.rows[0].chatid
+                    chatID:result.rows[0].chatid,
+                    members: members[0]
                 })
             } else {
                 console.log("creating new chat...")
@@ -84,7 +85,8 @@ let isStringProvided = validation.isStringProvided
 
                             response.send({
                                 success: 'Chat created',
-                                chatID:chatid
+                                chatID:chatid,
+                                members: members[0]
                             })
                         }).catch(err => {
                             console.log("error: adding members to new chat...")
