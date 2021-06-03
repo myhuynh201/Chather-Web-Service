@@ -45,12 +45,12 @@ router.get("/get", (request,response, next) => {
  * @apiDescription Given two memberid's, add the two members as contacts
  */
 router.post("/create", (request, response, next) => {
-    if(request.params.memberid === undefined){
+    if(request.headers.memberid === undefined){
         response.status(400).send({
             message: "Missing target memberid."
         })
     }
-    else if(isNaN(request.params.memberid)){
+    else if(isNaN(request.headers.memberid)){
         response.status(400).send({
             message: "MemberID's must be a number."
         })
@@ -60,7 +60,7 @@ router.post("/create", (request, response, next) => {
     }
 }, (request, respone, next ) =>{
     let query = 'SELECT Username FROM Members WHERE MemberID = $1'
-    let values = [request.params.memberid]
+    let values = [request.headers.memberid]
     pool.query(query, values)
     .then(result=>{
         if(result.rowCount !=1){
@@ -79,7 +79,7 @@ router.post("/create", (request, response, next) => {
     })
 }, (request, response, next) => {
     let query = 'SELECT Verified FROM Contacts WHERE (MemberId_A = $1 AND MemberId_B = $2)'
-    let values = [request.decoded.memberid, request.params.memberid]
+    let values = [request.decoded.memberid, request.headers.memberid]
 
     pool.query(query, values)
     .then(result => {
@@ -97,7 +97,7 @@ router.post("/create", (request, response, next) => {
     })
 }, (request, response) => {
     let query = "INSERT INTO Contacts(MemberID_A, MemberID_B) VALUES ($1, $2)"
-    let values = [request.decoded.memberid, request.params.memberid]
+    let values = [request.decoded.memberid, request.headers.memberid]
 
     pool.query(query, values)
     .catch(err => {
