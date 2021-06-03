@@ -28,14 +28,13 @@ app.use("/weather", middleware.checkToken, require("./routes/weather.js"))
 app.use("/forgot", require('./routes/forgot.js'))
 app.use("/reset", require('./routes/reset.js'))
 app.use("/changePassword", require('./routes/changePassword.js'))
-
 app.use("/contacts", middleware.checkToken, require('./routes/contacts.js'))
 app.use("/messages", middleware.checkToken, require('./routes/messages'))
 app.use("/chats", middleware.checkToken, require('./routes/chats.js'))
 app.use("/auth", middleware.checkToken, require('./routes/pushyregister.js'))
 
 
-
+app.disable('etag');
 /*
  * Return HTML for the / end point. 
  * This is a nice location to document your web service API
