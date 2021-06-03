@@ -241,47 +241,17 @@ router.get("/search", (request, response, next) =>
  * @apiDescription Given a username or a email address, find the user associated with it.
  */
 router.post("/verify", (request, response, next) => {
-    if(isStringProvided(request.body.memberIda) && isStringProvided(request.body.memberIdb))
-    {
-        next()
-    }
-    else
+    if(request.headers.memberid === undefined)
     {
         response.status(400).send({
             message: "Missing a memberid"
         })
     }
-}, (request, response, next) => {
-    if(isNaN(request.body.memberIda) || isNaN(request.body.memberIdb)){
-        response.send(400).send({
-            message: "MemberID's must be a number."
-        })
-    }
     else
     {
         next()
     }
-}, (request, response, next) => {
-    let query = "SELECT PrimaryKey FROM Contacts WHERE (MemberID_A = $1 AND MemberID_B = $2) OR (MemberID_A = $2 AND MemberID_B = $1)"
-    let values = [request.body.memberIda, request.body.memberIdb]
-    pool.query(query, values)
-    .then(result => {
-        if(result.rowCount > 1){
-            next()
-        }
-        else{
-            response.status(400).send({
-                message: "Contacts don't exist."
-            })
-        }
-    })
-    .catch(error => {
-        response.status(400).send({
-            message: "SQL Error looking for the contact",
-            error: error
-        })
-    })
-}, (request, response) => 
+},  (request, response) => 
 {
     let query = "UPDATE Contacts SET Verified = 1 WHERE (MemberID_A = $1 AND MemberID_B = $2) OR (MemberID_A = $2 AND MemberID_B = $1)"
     let values = [request.body.memberIda, request.body.memberIdb]
