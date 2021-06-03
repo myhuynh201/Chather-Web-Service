@@ -247,7 +247,7 @@ router.get("/search", (request, response, next) =>
 }, (request, response) => {
         if(isValidEmail(request.headers.searchp))
         {
-            let query = "SELECT MemberID, Username FROM Members WHERE Email = $1 AND NOT EXISTS (SELECT PrimaryKey FROM Contacts WHERE (MemberID_A = $1 AND MemberID_B = $2) OR (MemberID_A = $2 AND MemberID_B = $1) ) "
+            let query = "SELECT MemberID, Username FROM Members WHERE Email = $1 AND MemberID NOT EXISTS (SELECT PrimaryKey FROM Contacts WHERE (MemberID_A = $1 AND MemberID_B = $2) OR (MemberID_A = $2 AND MemberID_B = $1) ) "
             let values = [request.headers.searchp, request.decoded.memberid]
             pool.query(query,values)
             .then(result =>
@@ -265,7 +265,7 @@ router.get("/search", (request, response, next) =>
     }
     else
     {
-        let query = "SELECT MemberID, Username FROM Members WHERE Username = $1 AND NOT EXISTS (SELECT PrimaryKey FROM Contacts WHERE (MemberID_A = $1 AND MemberID_B = $2) OR (MemberID_A = $2 AND MemberID_B = $1)"
+        let query = "SELECT MemberID, Username FROM Members WHERE Username = $1 AND MemberID NOT EXISTS (SELECT PrimaryKey FROM Contacts WHERE (MemberID_A = $1 AND MemberID_B = $2) OR (MemberID_A = $2 AND MemberID_B = $1)"
         let values = [request.headers.searchp, request.decoded.memberid]
         pool.query(query,values)
         .then(result =>
