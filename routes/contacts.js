@@ -253,8 +253,8 @@ router.post("/verify", (request, response, next) => {
     }
 },  (request, response) => 
 {
-    let query = "UPDATE Contacts SET Verified = 1 WHERE (MemberID_A = $1 AND MemberID_B = $2) OR (MemberID_A = $2 AND MemberID_B = $1)"
-    let values = [request.body.memberIda, request.body.memberIdb]
+    let query = "UPDATE Contacts SET Verified = 1 WHERE (MemberID_A = $1 AND MemberID_B = $2)"
+    let values = [request.headers.memberid, request.decoded.memberid]
     pool.query(query, values)
     .then(result => {
         response.status(200).send({
