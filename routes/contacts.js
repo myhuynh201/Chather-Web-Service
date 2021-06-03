@@ -62,12 +62,12 @@ router.get("/get", (request,response, next) => {
  * @apiDescription Given two memberid's, add the two members as contacts
  */
 router.post("/create", (request, response, next) => {
-    if(request.body.memberIda === undefined || request.body.memberIdb === undefined){
+    if(request.params.memberid === undefined){
         response.status(400).send({
-            message: "Missing memberID a or Missing memberID b."
+            message: "Missing target memberid."
         })
     }
-    else if(isNaN(request.body.memberIda) || isNaN(request.body.memberIdb)){
+    else if(isNaN(request.params.memberid){
         response.status(400).send({
             message: "MemberID's must be a number."
         })
@@ -76,12 +76,11 @@ router.post("/create", (request, response, next) => {
         next()
     }
 }, (request, respone, next ) =>{
-    let query = 'SELECT Username FROM Members WHERE MemberID = $1 OR MemberID = $2'
-    let values = [request.body.memberIda, request.body.memberIdb]
-
+    let query = 'SELECT Username FROM Members WHERE MemberID = $1'
+    let values = [request.params.memberid]
     pool.query(query, values)
     .then(result=>{
-        if(result.rowCount !=2){
+        if(result.rowCount !=1){
             response.status(404).send({
                 message:"Members not found."
             })
@@ -96,8 +95,8 @@ router.post("/create", (request, response, next) => {
         })
     })
 }, (request, response, next) => {
-    let query = 'SELECT Verified FROM Contacts WHERE (MemberId_A = $1 AND MemberId_B = $2) OR (MemberId_B = $1 AND MemberId_A= $2)'
-    let values = [request.body.memberIda, request.body.memberIdb]
+    let query = 'SELECT Verified FROM Contacts WHERE (MemberId_A = $1 AND MemberId_B = $2)'
+    let values = [request.decoded.memberid, request.params.memberid]
 
     pool.query(query, values)
     .then(result => {
@@ -115,7 +114,7 @@ router.post("/create", (request, response, next) => {
     })
 }, (request, response) => {
     let query = "INSERT INTO Contacts(MemberID_A, MemberID_B) VALUES ($1, $2)"
-    let values = [request.body.memberIda, request.body.memberIdb]
+    let values = [request.decoded.memberid, request.params.memberid]
 
     pool.query(query, values)
     .catch(err => {
@@ -358,7 +357,7 @@ router.post("/verify", (request, response, next) => {
  * @apiDescription Given a userID, find all of that users unverified contacts
  */
 router.get("/getrequests", (request, response) => {
-    let query = "SELECT MemberID, FirstName, LastName, Username FROM Members WHERE MemberID IN (SELECT MemberID_A FROM Contacts WHERE MemberID_B = $1 AND Verified = 0) OR MemberID IN (SELECT MemberID_B FROM Contacts WHERE MemberID_A = $1 AND Verified = 0)"
+    let query = "SELECT MemberID, FirstName, LastName, Username FROM Members WHERE MemberID IN (SELECT MemberID_A FROM Contacts WHERE MemberID_B = $1 AND Verified = 0)"
     let values = [request.decoded.memberid]
     pool.query(query, values)
     .then(result => {
