@@ -46,12 +46,12 @@ router.get("/get", (request,response, next) => {
  */
 router.post("/create", (request, response, next) => {
     if(request.headers.memberid === undefined){
-        response.status(400).send({
+        response.status(401).send({
             message: "Missing target memberid."
         })
     }
     else if(isNaN(request.headers.memberid)){
-        response.status(400).send({
+        response.status(402).send({
             message: "MemberID's must be a number."
         })
     }
@@ -64,7 +64,7 @@ router.post("/create", (request, response, next) => {
     pool.query(query, values)
     .then(result=>{
         if(result.rowCount !=1){
-            response.status(404).send({
+            response.status(403).send({
                 message:"Members not found."
             })
         }
@@ -72,7 +72,7 @@ router.post("/create", (request, response, next) => {
             next()
         }
     }).catch(error=>{
-        response.status(400).send({
+        response.status(404).send({
             message: "SQL Error on memberid check",
             error: error
         })
@@ -84,14 +84,14 @@ router.post("/create", (request, response, next) => {
     pool.query(query, values)
     .then(result => {
         if(result.rowCount != 0){
-            response.status(400).send({
+            response.status(405).send({
                 message:"Contact already exists. already exists"
             })
         } else{
             next()
         }
     }).catch(err => {
-        response.status(400).send({
+        response.status(406).send({
             message:"SQL Error on contact verification check"
         })
     })
@@ -101,7 +101,7 @@ router.post("/create", (request, response, next) => {
 
     pool.query(query, values)
     .catch(err => {
-        response.status(400).send({
+        response.status(407).send({
             message:"SQL Error on insert."
         })
     })
