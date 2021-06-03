@@ -344,7 +344,32 @@ router.post("/verify", (request, response, next) => {
     .catch(error =>{
         response.status(400).send({
             message: "SQL Error updating verification",
-            error: erorr
+            error: error
+        })
+    })
+});
+
+
+/**
+ * @api {Verify} /contacts/getrequests
+ * @apiName Get requests
+ * @apiGroup Contacts
+ * 
+ * @apiDescription Given a userID, find all of that users unverified contacts
+ */
+router.get("/getrequests", (request, response) => {
+    let query = "SELECT MemberID, FirstName, LastName, Username FROM Members WHERE MemberID IN (SELECT MemberID_A FROM Contacts WHERE MemberID_B = $1 AND Verified = 0) OR MemberID IN (SELECT MemberID_B FROM Contacts WHERE MemberID_A = $1 AND Verified = 0)"
+    let values = [request.decoded.memberid]
+    pool.query(query, values)
+    .then(result => {
+        response.send({
+            rows:result.rows
+        })
+    })
+    .catch(error => {
+        response.status(400).send({
+            message: "SQL Error when searching for contacts,",
+            error:error
         })
     })
 });
