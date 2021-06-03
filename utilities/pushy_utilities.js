@@ -28,7 +28,12 @@ function sendMessageToIndividual(token, message) {
 }
 
 //add other "sendTypeToIndividual" functions here. Don't forget to export them
-
+function sendContactRequestToIndividual(token, message) {
+    var data ={
+        "type": "contactReq",
+        "contactid": message
+    }
+}
 module.exports = {
     sendMessageToIndividual
 }
