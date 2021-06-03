@@ -20,36 +20,19 @@ let isValidEmail = validation.isValidEmail
  * @apiDescription Requests all of the usernames of the contacts for a member
  */
 router.get("/get", (request,response, next) => {
-    if (request.decoded.memberid === undefined){
-        response.status(400).send({
-            message: "Missing required information"
-        })
-        console.log("Not getting corrrect info")
-    }
-    else if (isNaN(request.decoded.memberid)){
-        response.status(400).send({
-            message: "memberId should be a number."
-        })
-        console.log("something is not a number")
-    }
-    else{
-        next()
-    }
-}, (request, response) => {
-    let query = "SELECT Username, FirstName, LastName, MemberID FROM Members WHERE MemberID != $1 AND (MemberID IN (SELECT MemberID_A FROM CONTACTS WHERE MemberID_B = $1 AND Verified = 1) OR MemberID IN (SELECT MemberID_B FROM CONTACTS WHERE MemberID_A = $1 AND Verified  = 1))" 
+    let query = "SELECT MemberID, FirstName, LastName, Username FROM Members WHERE MemberID IN (SELECT MemberID_A FROM Contacts WHERE MemberID_B = $1 AND Verified = 1) OR MemberID IN (SELECT MemberID_B FROM Contacts WHERE MemberID_A = $1 AND Verified = 1)"
     let values = [request.decoded.memberid]
     pool.query(query, values)
     .then(result => {
         response.send({
-            rowCount: result.rowCount,
-            rows: result.rows
+            rows:result.rows
         })
-    }).catch(err => {
+    })
+    .catch(error => {
         response.status(400).send({
-            message: "SQL Error",
-            error: err
+            message: "SQL Error when searching for contacts,",
+            error:error
         })
-        console.log("Some sort of sql error")
     })
 });
 
