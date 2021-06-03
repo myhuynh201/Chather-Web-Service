@@ -132,7 +132,7 @@ router.post("/create", (request, response, next) => {
  * @apiDescription The desired contact to delete
  */
 router.post("/delete", (request, response, next) => {
-    if(isStringProvided(request.body.memberid)){
+    if(request.params.memberid === undefined){
         response.status(400).send({
             message: "Missing memberid."
         })
@@ -142,7 +142,7 @@ router.post("/delete", (request, response, next) => {
     }
 }, (request, response, next) => {
     let query = 'SELECT Verified FROM Contacts WHERE (MemberId_A = $1 AND MemberId_B = $2) OR (MemberId_B = $1 AND MemberId_A= $2)'
-    let values = [request.body.memberid, request.decoded.memberid]
+    let values = [request.params.memberid, request.decoded.memberid]
 
     pool.query(query, values)
     .then(result => {
@@ -161,7 +161,7 @@ router.post("/delete", (request, response, next) => {
     })
 }, (request, response) => {
     let query = 'DELETE FROM Contacts WHERE (MemberId_A = $1 AND MemberId_B = $2) OR (MemberId_B = $1 AND MemberId_A= $2)'
-    let values = [request.body.memberid, request.decoded.memberid]
+    let values = [request.params.memberid, request.decoded.memberid]
 
     pool.query(query, values)
     .then(result => {
