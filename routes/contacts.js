@@ -237,7 +237,7 @@ router.get("/search", (request, response, next) =>
     }
     else
     {
-        response.status(400).send({
+        response.status(420).send({
             message: "Need a search paramter."
         })
     }
