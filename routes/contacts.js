@@ -50,7 +50,7 @@ router.post("/create", (request, response, next) => {
             message: "Missing target memberid."
         })
     }
-    else if(isNaN(request.params.memberid){
+    else if(isNaN(request.params.memberid)){
         response.status(400).send({
             message: "MemberID's must be a number."
         })
