@@ -148,7 +148,7 @@ memberidlist = []
 
 
 /**
- * @api {delete} /chats/delete/:chatid Delete a chat
+ * @api {post} /chats/delete/:chatid Delete a chat
  * @apiName Delete Chat
  * @apiGroup Chats
  * 
