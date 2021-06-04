@@ -59,19 +59,29 @@ router.post("/create", (request, response, next) => {
     else {
         next()
     }
-}, (request, response) => {
+}, (request, response, next) => {
     let query = "INSERT INTO Contacts(MemberID_A, MemberID_B) VALUES ($1, $2)"
     let values = [request.decoded.memberid, request.headers.memberid]
 
     pool.query(query, values)
     .then( result =>
-        response.status(200).send({
-            message: "Contact created."
-        })
+        next()
         )
     .catch(err => {
         response.status(407).send({
             message:"SQL Error on insert."
+        })
+    })
+}, (request, response) => {
+    let query = "SELECT token FROM Push_Token WHERE memberid = $1"
+    let values = [request.headers.memberid]
+    pool.query(query, values)
+    .then(result => {
+        result.rows.forEach(entry =>
+            msg_functions.sendContactRequestToIndividual(
+                entry.token, request.headers.memberid))
+        response.status(200).send({
+            message:"Contact request sent."
         })
     })
 });
@@ -127,51 +137,6 @@ router.post("/delete", (request, response, next) => {
         })
     })
 });
-
-
-/**
- * @api {findsinglechat} /contacts/1v1 chat Find a chat room
- * @apiName Find a single chat room
- * @apiGroup Contacts
- * 
- * @apiDescription Given two memberid's, remove the two members as contacts
- */
-router.post("/1v1chat", (request, response, next) => {
-    if(isStringProvided(request.body.memberId)){
-        next()
-    }
-    else{
-        response.status(400).send({
-            message: "Missing member id"
-        })
-    }
-}, (request, response, next) => {
-    if(isNaN(request.body.memberId)){
-        response.status(400).send({
-            message: "Member ids must be numbers."
-        })
-    }
-    else{
-        next()
-    }
-}, (request, response, next) => {
-    let query = "SELECT Username FROM Members WHERE MemberID = $1 OR MemberID = $2"
-    let values = [request.body.memberId, request.decoded.memberid]
-    pool.query(query, values)
-    .then(result => {
-        if(result.rowCount == 2){
-            next()
-        }
-        else{
-            response.status(400).send({
-                message: "One or both of the members do not exist."
-            })
-        }
-    })
-}, (request, response) => {
-    let query = "SELECT ChatID FROM ChatMembers WHERE (SELECT Count(*) FROM ChatMembers )"
-});
-
 
 
 /**
