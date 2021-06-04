@@ -8,7 +8,7 @@ Link to Heroku URL: https://tcss450-android-app.herokuapp.com <br />
 Link to Heroku Documentation: https://tcss450-android-app.herokuapp.com/doc <br />
 Link to Google drive meeting notes: https://drive.google.com/drive/u/2/folders/0AG0QjEWU1jr2Uk9PVA <br />
 _______________________________________________<br /><br />
-GUEST ACCOUNTS:
-GUEST 1: 
-GUEST 2:
+GUEST ACCOUNTS:<br />
+GUEST 1: <br />
+GUEST 2:<br />
 
