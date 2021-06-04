@@ -125,8 +125,8 @@ router.post("/", (request, response, next) => {
         let query = `SELECT token FROM Push_Token
                         INNER JOIN ChatMembers ON
                         Push_Token.memberid=ChatMembers.memberid
-                        WHERE ChatMembers.chatId=$1 AND Push_Token.memberid != $2`
-        let values = [request.body.chatI, request.decoded.memberid]
+                        WHERE ChatMembers.chatId=$1`
+        let values = [request.body.chatID]
         pool.query(query, values)
             .then(result => {
                 result.rows.forEach(entry => 
