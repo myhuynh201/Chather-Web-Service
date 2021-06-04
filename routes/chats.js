@@ -164,7 +164,7 @@ memberidlist = []
  * 
  * @apiUse JSONError
  */ 
- router.delete("/delete", (request, response, next) => {
+ router.post("/delete", (request, response, next) => {
     //validate on empty parameters
     if (!request.body.chatid) {
         response.status(400).send({
@@ -177,7 +177,26 @@ memberidlist = []
     } else {
         next()
     }
-    }, (request, response, next) => {
+    },(request, response, next) => {
+        let query = 'SELECT * FROM chats WHERE chatid=$1'
+        let values = [request.body.chatid]
+      
+        pool.query(query, values)
+        .then(result=> {
+            if (result.rowCount > 0) {
+                next();
+            } else {
+                response.status(300).send({
+                    message: "Chat does not exist"
+                })
+            }
+        }).catch(error=> {
+            response.status(300).send({
+                message: "Chat does not exist",
+                error:error
+            })
+        }) 
+    },(request, response, next) => {
         //validate chat id exists
         let query = 'DELETE FROM messages WHERE ChatId=$1'
         let values = [request.body.chatid]
