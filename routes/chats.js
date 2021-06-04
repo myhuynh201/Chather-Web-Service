@@ -64,7 +64,7 @@ memberidlist = []
             } else {
                 console.log(queryCount + " found out of " + inputCount)
                 response.status(400).send({
-                    message: `Not all members are found. Only found ${queryCount} out of ${inputCount}`
+                    message: `Not all members are found. Only found ${queryCount} out of ${inputCount} member(s).`
                 })
             }
         }).catch(error=> {
@@ -145,6 +145,79 @@ memberidlist = []
         // add all members to chat
     }
 )
+
+
+/**
+ * @api {delete} /chats/delete/:chatid Delete a chat
+ * @apiName Delete Chat
+ * @apiGroup Chats
+ * 
+ * @apiDescription Delete a chat, its messages, and remove association with members. 
+ * 
+ * @apiHeader {String} authorization Valid JSON Web Token JWT
+ * 
+ * @apiParam {int} chatid ID of chat to be deleted
+ * 
+ * @apiSuccess {boolean} success true when the name is inserted
+ * 
+ * @apiError (404: Chat Not Found) {String} message "chatID not found"
+ * 
+ * @apiUse JSONError
+ */ 
+ router.delete("/delete", (request, response, next) => {
+    //validate on empty parameters
+    if (!request.body.chatid) {
+        response.status(400).send({
+            message: "Missing required information"
+        })
+    } else if (isNaN(request.body.chatid)) {
+        response.status(400).send({
+            message: "Malformed parameter. chatid must be a number"
+        })
+    } else {
+        next()
+    }
+    }, (request, response, next) => {
+        //validate chat id exists
+        let query = 'DELETE FROM messages WHERE ChatId=$1'
+        let values = [request.body.chatid]
+      
+        pool.query(query, values)
+        .then(result => {
+            let query = 'DELETE FROM chatmembers WHERE ChatId=$1'
+            let values = [request.body.chatid]
+    
+            pool.query(query, values)
+            .then(result => {
+                let query = 'DELETE FROM chats WHERE ChatId=$1'
+                let values = [request.body.chatid]
+            
+                pool.query(query, values)
+                .then(result => {
+                    response.send({
+                        success: true,
+                        message: `Chat ${request.body.chatid} has been deleted!`
+                    })
+                })
+                .catch(error => {
+                    response.status(400).send({
+                        message: "SQL Error",
+                        error: error
+                    })
+                })
+            }).catch(error => {
+                response.status(400).send({
+                    message: "SQL Error",
+                    error: error
+                })
+            })
+        }).catch(error => {
+            response.status(400).send({
+                message: "SQL Error",
+                error: error
+            })
+        })
+    })
 
 /**
  * @api {put} /chats/newChat Create a new chat with given members
