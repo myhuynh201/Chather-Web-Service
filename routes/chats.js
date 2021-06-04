@@ -64,7 +64,7 @@ memberidlist = []
             } else {
                 console.log(queryCount + " found out of " + inputCount)
                 response.status(400).send({
-                    message: `Not all members are found. Only found ${result.rows}`,
+                    message: `Not all members are found. Only found ${queryCount} out of ${inputCount}`
                 })
             }
         }).catch(error=> {
