@@ -1,6 +1,7 @@
 # TCSS450-Group 7
 
-Back-end code for Chather <br /><br />
+Back-end code for Chather <br />
+_______________________________________________<br /><br />
 
 Link to Server-side Github repository: https://github.com/myhuynh201/TCSS450-Web-Service <br />
 Link to Client-side Android Github repository: https://github.com/EvanFrostone/TCSS450-Android-App <br />
