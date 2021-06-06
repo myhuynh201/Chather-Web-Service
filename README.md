@@ -12,11 +12,9 @@ Link to Google drive meeting notes: https://drive.google.com/drive/u/2/folders/0
 _______________________________________________<br /><br />
 SUCCESSFULLY IMPLEMENTED: <br />
 1. Register:  <br />
-- First name
-- Last name
-- Email
-- Username
-- Password
+- Required info: last name, first name, email, username, password
+- Client and server side checks for validity: password must have at least 7 characters with 1 uppercase, 1 lowercase, 1 number and 1 special character.
+<br />
 _______________________________________________<br /><br />
 GUEST ACCOUNTS:<br />
 GUEST 1: <br />
