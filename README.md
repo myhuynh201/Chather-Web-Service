@@ -11,9 +11,12 @@ Link to Heroku Documentation: https://tcss450-android-app.herokuapp.com/doc <br 
 Link to Google drive meeting notes: https://drive.google.com/drive/u/2/folders/0AG0QjEWU1jr2Uk9PVA <br />
 _______________________________________________<br /><br />
 SUCCESSFULLY IMPLEMENTED: <br />
-Register: ⋅⋅⋅Required info:
-......* First name
-......* Last name
+1. Register:  <br />
+- First name
+- Last name
+- Email
+- Username
+- Password
 _______________________________________________<br /><br />
 GUEST ACCOUNTS:<br />
 GUEST 1: <br />
