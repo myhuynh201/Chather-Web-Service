@@ -1,4 +1,5 @@
 # TCSS450-Group 7
+## Authors: My Duyen Huynh, Alec Mac, Alejandro Cossio Olono, DeMarco Ray Best II, Duy Nguyen
 
 Back-end code for Chather <br />
 _______________________________________________<br /><br />
