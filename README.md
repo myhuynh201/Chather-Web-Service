@@ -23,14 +23,20 @@ SUCCESSFULLY IMPLEMENTED: <br />
 - Option to stay logged in
 - Option to reset a password if the user forgot their password
 - Upon successful login, takes user to home page
+<br />
 3. Home Page: <br />
 - Homepage will display greeting message, current weather, new notifications (friend requests, new messages, etc)
 - Ability to navigate to contact, chat or weather page
 - Ability to navigate to change password, change theme page or signout
+<br />
 5. Chat: <br />
+<br />
 6. Contacts: <br />
+<br />
 7. Weather: <br />
+<br />
 8. Notifications: <br />
+<br />
 9. Theme, Colors, Icons, Look and Feel: <br />
 - Option to select from 5 themes: blue, green, pink, purple, dark
 - Custom app icon
@@ -42,6 +48,7 @@ GUEST ACCOUNTS:<br />
 1. Guest 1: <br />
 - Email:
 - Password:
+<br />
 2. Guest 2:<br />
 - Email:
 - Password:
