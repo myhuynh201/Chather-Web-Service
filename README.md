@@ -12,22 +12,22 @@ Link to Google drive meeting notes: https://drive.google.com/drive/u/2/folders/0
 _______________________________________________<br /><br />
 SUCCESSFULLY IMPLEMENTED: <br />
 1. Register:  <br />
-- Required info: last name, first name, email, password
+- Required info: last name, first name, email, password.
 - Client and server side checks for validity: password must have at least 7 characters with 1 uppercase, 1 lowercase, 1 number and 1 special character.
 - Users have to verify their email before they can signin, the verification email will be sent to user's email address after they registered.
 <br />
 2. Login: <br />
-- Required info: email, password
-- Client side checks: no empty fields and password requirements
-- Server side checks: check login credentials exist in the database
-- Option to stay logged in
-- Option to reset a password if the user forgot their password
-- Upon successful login, takes user to home page
+- Required info: email, password.
+- Client side checks: no empty fields and password requirements.
+- Server side checks: check login credentials exist in the database.
+- Option to stay logged in.
+- Option to reset a password if the user forgot their password.
+- Upon successful login, takes user to home page.
 <br />
 3. Home Page: <br />
-- Homepage will display greeting message, current weather, new notifications (friend requests, new messages, etc)
-- Ability to navigate to contact, chat or weather page
-- Ability to navigate to change password, change theme page or signout
+- Homepage will display greeting message, current weather, new notifications (friend requests, new messages, etc).
+- Ability to navigate to contact, chat or weather page.
+- Ability to navigate to change password, change theme page or signout.
 <br />
 5. Chat: <br />
 <br />
@@ -38,8 +38,8 @@ SUCCESSFULLY IMPLEMENTED: <br />
 8. Notifications: <br />
 <br />
 9. Theme, Colors, Icons, Look and Feel: <br />
-- Option to select from 5 themes: blue, green, pink, purple, dark
-- Custom app icon
+- Option to select from 5 themes: blue, green, pink, purple, dark.
+- Custom app icon.
 <br />
 _______________________________________________<br /><br />
 NOT IMPLEMENTED: <br />
