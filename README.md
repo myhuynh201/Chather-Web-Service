@@ -61,6 +61,9 @@ SUCCESSFULLY IMPLEMENTED: <br />
 <br />
 _______________________________________________<br /><br />
 NOT IMPLEMENTED: <br />
+-Home screen notification reel (See all unread notifications in a single spot).<br />
+-Adding/removing individuals from chatrooms.<br />
+-Sending weather widget in chatrooms.<br />
 _______________________________________________<br /><br />
 GUEST ACCOUNTS:<br />
 1. Guest 1: <br />
