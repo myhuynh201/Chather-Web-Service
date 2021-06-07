@@ -38,6 +38,11 @@ SUCCESSFULLY IMPLEMENTED: <br />
 5. Contacts: <br />
 <br />
 6. Weather: <br />
+- Search for weather conditions at a given zip code through the search function atop the weather page.<br />
+- View the current temperature and weather conditions from your current location upon navigation to the weather page.<br />
+- View 7-day forecasts with information including projected Hi’s and Lo’s along with weather conditions.<br />
+- 24-hour forecasts are also available at the bottom of the weather page as well.<br />
+- Location in name and in coordinates are displayed so that pinpoint accuracy is assured when determining weather conditions of a given location. <br />
 <br />
 7. Current Location: <br /> 
 - From the weather page the user can navigate to the current location through clicking the map icon, near the search icon at the top. <br />
