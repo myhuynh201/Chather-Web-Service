@@ -36,6 +36,10 @@ SUCCESSFULLY IMPLEMENTED: <br />
 4. Chat: <br />
 <br />
 5. Contacts: <br />
+- Search for contacts using their email or username through the icon on the top of the contacts page. <br />
+- Contact request will appear for the recipent where they can accept or deny them at will.<br />
+- Contacts can be deleted using the button on the contact card.<br />
+- Tapping the message button on a contact card will take you to a single participant chat with that contact. If one doesn't exist, a chatroom will be created.<br /> 
 <br />
 6. Weather: <br />
 - Search for weather conditions at a given zip code through the search function atop the weather page.<br />
