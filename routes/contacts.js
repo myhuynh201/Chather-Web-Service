@@ -121,7 +121,7 @@ router.post("/delete", (request, response, next) => {
             message: "SQL Error on searching for the contact"
         })
     })
-}, (request, response) => {
+}, (request, response, next) => {
     let query = 'DELETE FROM Contacts WHERE (MemberId_A = $1 AND MemberId_B = $2) OR (MemberId_B = $1 AND MemberId_A= $2)'
     let values = [request.headers.memberid, request.decoded.memberid]
 
@@ -130,10 +130,24 @@ router.post("/delete", (request, response, next) => {
         response.status(200).send({
             message: "Contact deleted."
         })
+        next()
     }).catch(error => {
         response.status(404).send({
             message: "SQL error on deleting the contact.",
             error: error
+        })
+    })
+}, (request, response) => {
+    let query = 'SELECT token FROM PUSH_TOKEN WHERE memberid = $1'
+    let values = [request.headers.memberid]
+
+    pool.query(query, values)
+    .then(result => {
+        result.rows.forEach(
+            entry => msg_functions.sendSelfMemberIDToIndividual(
+                entry.token, request.headers.memberid))
+        response.status(200).send({
+            message: "Request sent."
         })
     })
 });
@@ -217,7 +231,7 @@ router.post("/verify", (request, response, next) => {
     {
         next()
     }
-},  (request, response) => 
+},  (request, response, next) => 
 {
     let query = "UPDATE Contacts SET Verified = 1 WHERE (MemberID_A = $1 AND MemberID_B = $2)"
     let values = [request.headers.memberid, request.decoded.memberid]
@@ -233,7 +247,20 @@ router.post("/verify", (request, response, next) => {
             error: error
         })
     })
-});
+}, (request, response) => {
+    let query = 'SELECT token FROM PUSH_TOKEN WHERE memberid = $1'
+    let values = [request.headers.memberid]
+
+    pool.query(query, values)
+    .then(result => {
+        result.rows.forEach(
+            entry => msg_functions.sendSelfMemberIDToIndividual(
+                entry.token, request.headers.memberid))
+        response.status(200).send({
+            message: "Request sent."
+        })
+    })
+})
 
 
 /**

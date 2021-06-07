@@ -45,6 +45,27 @@ function sendContactRequestToIndividual(token, message) {
         console.log('Push sent successfully! (ID: ' + id + ')')
     })
 }
+
+//add other "sendTypeToIndividual" functions here. Don't forget to export them
+function sendSelfMemberIDToIndividual(token, selfMemberID) {
+    var data ={
+        "type": "contactMemberID",
+        "contactid": selfMemberID
+    }
+        // Send push notification via the Send Notifications API 
+    // https://pushy.me/docs/api/send-notifications 
+    pushyAPI.sendPushNotification(data, token, {}, function (err, id) {
+        // Log errors to console 
+        if (err) {
+            return console.log('Fatal Error', err);
+        }
+
+        // Log success 
+        console.log('Push sent successfully! (ID: ' + id + ')')
+    })
+}
+
+
 module.exports = {
-    sendMessageToIndividual, sendContactRequestToIndividual
+    sendMessageToIndividual, sendContactRequestToIndividual, sendSelfMemberIDToIndividual
 }
