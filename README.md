@@ -64,7 +64,8 @@ SUCCESSFULLY IMPLEMENTED: <br />
 - to satellite or even hybrid through hitting the change style button. <br />
 <br />
 8. Notifications: <br />
-- Chat messages send push notifications to all members in the chatroom.
+- Chat messages send push notifications to all members in the chatroom.<br />
+- Sending a contact request will send a push notification to the recipient.<br />
 <br />
 9. Theme, Colors, Icons, Look and Feel: <br />
 - Option to select from 5 themes: blue, green, pink, purple, dark.<br />
