@@ -498,6 +498,78 @@ define({ "api": [
     "groupTitle": "Chats"
   },
   {
+    "type": "post",
+    "url": "/chats/delete/:chatid",
+    "title": "Delete a chat",
+    "name": "Delete_Chat",
+    "group": "Chats",
+    "description": "<p>Delete a chat, its messages, and remove association with members.</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Valid JSON Web Token JWT</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "int",
+            "optional": false,
+            "field": "chatid",
+            "description": "<p>ID of chat to be deleted</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>true when the name is inserted</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "404: Chat Not Found": [
+          {
+            "group": "404: Chat Not Found",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>&quot;chatID not found&quot;</p>"
+          }
+        ],
+        "400: JSON Error": [
+          {
+            "group": "400: JSON Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>&quot;malformed JSON in parameters&quot;</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routes/chats.js",
+    "groupTitle": "Chats"
+  },
+  {
     "type": "get",
     "url": "/chats/:chatId?",
     "title": "Request to get the emails of user in a chat",
@@ -666,6 +738,240 @@ define({ "api": [
             "optional": false,
             "field": "message",
             "description": "<p>&quot;Malformed parameter. chatId must be a number&quot;</p>"
+          }
+        ],
+        "400: Missing Parameters": [
+          {
+            "group": "400: Missing Parameters",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>&quot;Missing required information&quot;</p>"
+          }
+        ],
+        "400: SQL Error": [
+          {
+            "group": "400: SQL Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>the reported SQL error details</p>"
+          }
+        ],
+        "400: JSON Error": [
+          {
+            "group": "400: JSON Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>&quot;malformed JSON in parameters&quot;</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routes/chats.js",
+    "groupTitle": "Chats"
+  },
+  {
+    "type": "put",
+    "url": "/chats/newChat/usernames",
+    "title": "Create a new chat with given members",
+    "name": "New_Chat",
+    "group": "Chats",
+    "description": "<p>Create a new chat and insert sender and recipient members.</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Valid JSON Web Token JWT</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "JSONArray",
+            "optional": false,
+            "field": "members",
+            "description": "<p>Recipient(s) of the new chat</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>true when the name is inserted</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "404: Chat Not Found": [
+          {
+            "group": "404: Chat Not Found",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>&quot;chatID not found&quot;</p>"
+          }
+        ],
+        "404: Email Not Found": [
+          {
+            "group": "404: Email Not Found",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>&quot;email not found&quot;</p>"
+          }
+        ],
+        "400: Invalid Parameter": [
+          {
+            "group": "400: Invalid Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>&quot;Malformed parameter. chatId must be a number&quot;</p>"
+          }
+        ],
+        "400: Duplicate Email": [
+          {
+            "group": "400: Duplicate Email",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>&quot;user already joined&quot;</p>"
+          }
+        ],
+        "400: Missing Parameters": [
+          {
+            "group": "400: Missing Parameters",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>&quot;Missing required information&quot;</p>"
+          }
+        ],
+        "400: SQL Error": [
+          {
+            "group": "400: SQL Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>the reported SQL error details</p>"
+          }
+        ],
+        "400: JSON Error": [
+          {
+            "group": "400: JSON Error",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>&quot;malformed JSON in parameters&quot;</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routes/chats.js",
+    "groupTitle": "Chats"
+  },
+  {
+    "type": "put",
+    "url": "/chats/newChat",
+    "title": "Create a new chat with given members",
+    "name": "New_Chat",
+    "group": "Chats",
+    "description": "<p>Create a new chat and insert sender and recipient members.</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Valid JSON Web Token JWT</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "JSONArray",
+            "optional": false,
+            "field": "members",
+            "description": "<p>Recipient(s) of the new chat</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "boolean",
+            "optional": false,
+            "field": "success",
+            "description": "<p>true when the name is inserted</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "404: Chat Not Found": [
+          {
+            "group": "404: Chat Not Found",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>&quot;chatID not found&quot;</p>"
+          }
+        ],
+        "404: Email Not Found": [
+          {
+            "group": "404: Email Not Found",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>&quot;email not found&quot;</p>"
+          }
+        ],
+        "400: Invalid Parameter": [
+          {
+            "group": "400: Invalid Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>&quot;Malformed parameter. chatId must be a number&quot;</p>"
+          }
+        ],
+        "400: Duplicate Email": [
+          {
+            "group": "400: Duplicate Email",
+            "type": "String",
+            "optional": false,
+            "field": "message",
+            "description": "<p>&quot;user already joined&quot;</p>"
           }
         ],
         "400: Missing Parameters": [
@@ -929,7 +1235,64 @@ define({ "api": [
     "title": "Add a contact to the current member",
     "name": "Create_Contact",
     "group": "Contacts",
-    "description": "<p>Given two memberid's, add the two members as contacts</p>",
+    "description": "<p>Given a single member ID create a contact entry with the passed memberID and the current user's memberID.</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "Integer",
+            "optional": false,
+            "field": "The",
+            "description": "<p>memberid of the member we're looking to add as a contact.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "Success",
+            "description": "<p>when the token has been succesfully found by the server.</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "401: Missing target member id": [
+          {
+            "group": "401: Missing target member id",
+            "type": "String",
+            "optional": false,
+            "field": "Nothing",
+            "description": "<p>has been passed in from request.headers.memberid</p>"
+          }
+        ],
+        "402: MemberIDs must be a number": [
+          {
+            "group": "402: MemberIDs must be a number",
+            "type": "String",
+            "optional": false,
+            "field": "The",
+            "description": "<p>passed memberID was not a number as is required.</p>"
+          }
+        ],
+        "403: SQL Error on insert": [
+          {
+            "group": "403: SQL Error on insert",
+            "type": "String",
+            "optional": false,
+            "field": "There",
+            "description": "<p>'s been some issue on the SQL server.</p>"
+          }
+        ]
+      }
+    },
     "version": "0.0.0",
     "filename": "routes/contacts.js",
     "groupTitle": "Contacts"
@@ -940,7 +1303,69 @@ define({ "api": [
     "title": "Delete a contact from the current member's contacts list",
     "name": "Delete_Contact",
     "group": "Contacts",
-    "description": "<p>Given two memberid's, remove the two members as contacts</p>",
+    "description": "<p>Deletes ANY contact entries with both the current user's memberID and the passed ID.</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "memberID:",
+            "description": "<p>The memberID of the user we wish to delete from the server.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "Succceds",
+            "description": "<p>after deleting contact and sending the pushy notification.</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "400: Missing memberid": [
+          {
+            "group": "400: Missing memberid",
+            "optional": false,
+            "field": "Member",
+            "description": "<p>ID is missing.</p>"
+          }
+        ],
+        "402: There is no contact with these memebers": [
+          {
+            "group": "402: There is no contact with these memebers",
+            "optional": false,
+            "field": "The",
+            "description": "<p>memberID passed and the current member do not have a contact entry.</p>"
+          }
+        ],
+        "403: SQL Error on searching for the contact": [
+          {
+            "group": "403: SQL Error on searching for the contact",
+            "optional": false,
+            "field": "SQL",
+            "description": "<p>ran into some sort of issue when querying.</p>"
+          }
+        ],
+        "403: SQL Error on deleting the contact": [
+          {
+            "group": "403: SQL Error on deleting the contact",
+            "optional": false,
+            "field": "SQL",
+            "description": "<p>error when deleting the contact</p>"
+          }
+        ]
+      }
+    },
     "version": "0.0.0",
     "filename": "routes/contacts.js",
     "groupTitle": "Contacts"
@@ -952,6 +1377,84 @@ define({ "api": [
     "name": "GetContacts",
     "group": "Contacts",
     "description": "<p>Requests all of the usernames of the contacts for a member</p>",
+    "error": {
+      "fields": {
+        "400: SQL error when searching for contacts": [
+          {
+            "group": "400: SQL error when searching for contacts",
+            "optional": false,
+            "field": "SQL",
+            "description": "<p>ran into an issue searching for the contact.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routes/contacts.js",
+    "groupTitle": "Contacts"
+  },
+  {
+    "type": "Verify",
+    "url": "/contacts/getrequests",
+    "title": "",
+    "name": "Get_requests",
+    "group": "Contacts",
+    "description": "<p>Given a userID, find all of that users unverified contacts</p>",
+    "version": "0.0.0",
+    "filename": "routes/contacts.js",
+    "groupTitle": "Contacts"
+  },
+  {
+    "type": "Search",
+    "url": "/contacts/search",
+    "title": "Find a user",
+    "name": "Search_for_Contact",
+    "group": "Contacts",
+    "description": "<p>Given an username or an email address, find the user associated with it excluding yourself.</p>",
+    "success": {
+      "fields": {
+        "Success 200: Succesfully got list of users": [
+          {
+            "group": "Success 200: Succesfully got list of users",
+            "type": "String[]",
+            "optional": false,
+            "field": "The",
+            "description": "<p>SQL rows containing memberiD, firstname, lastname, and username.</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "400: Need a search parameter": [
+          {
+            "group": "400: Need a search parameter",
+            "optional": false,
+            "field": "Missing",
+            "description": "<p>the search parameter in the header.</p>"
+          }
+        ],
+        "401: SQL Error": [
+          {
+            "group": "401: SQL Error",
+            "optional": false,
+            "field": "SQL",
+            "description": "<p>ran into anm issue</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "routes/contacts.js",
+    "groupTitle": "Contacts"
+  },
+  {
+    "type": "Verify",
+    "url": "/contacts/verify",
+    "title": "Verify a contact",
+    "name": "Verify_a_Contact",
+    "group": "Contacts",
+    "description": "<p>Given a memberID, find and verify the contact associated with it and the current user.</p>",
     "version": "0.0.0",
     "filename": "routes/contacts.js",
     "groupTitle": "Contacts"
