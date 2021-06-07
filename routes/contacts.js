@@ -18,6 +18,8 @@ let isValidEmail = validation.isValidEmail
  * @apiGroup Contacts
  * 
  * @apiDescription Requests all of the usernames of the contacts for a member
+ * 
+ * @apiError (400: SQL error when searching for contacts) SQL ran into an issue searching for the contact.
  */
 router.get("/get", (request,response) => {
     let query = "SELECT MemberID, FirstName, LastName, Username FROM Members WHERE MemberID IN (SELECT MemberID_A FROM Contacts WHERE MemberID_B = $1 AND Verified = 1) OR MemberID IN (SELECT MemberID_B FROM Contacts WHERE MemberID_A = $1 AND Verified = 1)"
@@ -43,7 +45,15 @@ router.get("/get", (request,response) => {
  * @apiName Create Contact
  * @apiGroup Contacts
  * 
- * @apiDescription Given two memberid's, add the two members as contacts
+ * @apiDescription Given a single member ID create a contact entry with the passed memberID and the current user's memberID.
+ * 
+ * @apiHeader {Integer} The memberid of the member we're looking to add as a contact.
+ * 
+ * @apiSuccess (Success 200) {String} Success when the token has been succesfully found by the server.
+ * 
+ * @apiError (401: Missing target member id) {String} Nothing has been passed in from request.headers.memberid
+ * @apiError (402: MemberIDs must be a number) {String} The passed memberID was not a number as is required.
+ * @apiError (403: SQL Error on insert) {String} There's been some issue on the SQL server.
  */
 router.post("/create", (request, response, next) => {
     if(request.headers.memberid === undefined){
@@ -53,7 +63,7 @@ router.post("/create", (request, response, next) => {
     }
     else if(isNaN(request.headers.memberid)){
         response.status(402).send({
-            message: "MemberID's must be a number."
+            message: "MemberIDs must be a number."
         })
     }
     else {
@@ -68,7 +78,7 @@ router.post("/create", (request, response, next) => {
         next()
         )
     .catch(err => {
-        response.status(407).send({
+        response.status(403).send({
             message:"SQL Error on insert."
         })
     })
@@ -83,15 +93,30 @@ router.post("/create", (request, response, next) => {
         response.status(200).send({
             message:"Contact request sent."
         })
+    }).catch(err =>{
+        response.status(403).send({
+            message: "Error finding device pushy token on server."
+        })
     })
 });
+
 
 /**
  * @api {delete} /contacts/delete Delete a contact from the current member's contacts list
  * @apiName Delete Contact
  * @apiGroup Contacts
  * 
- * @apiDescription The desired contact to delete
+ * @apiDescription Deletes ANY contact entries with both the current user's memberID and the passed ID.
+ * 
+ * @apiHeader {String} memberID: The memberID of the user we wish to delete from the server.
+ * 
+ * @apiSuccess (Success 200) {String} Succceds after deleting contact and sending the pushy notification.
+ * 
+ * @apiError (400: Missing memberid) Member ID is missing.
+ * @apiError (402: There is no contact with these memebers) The memberID passed and the current member do not have a contact entry.
+ * @apiError (403: SQL Error on searching for the contact) SQL ran into some sort of issue when querying.
+ * @apiError (403: SQL Error on deleting the contact)  SQL error when deleting the contact
+ * 
  */
 router.post("/delete", (request, response, next) => {
     if(request.headers.memberid === undefined){
@@ -126,13 +151,9 @@ router.post("/delete", (request, response, next) => {
     let values = [request.headers.memberid, request.decoded.memberid]
 
     pool.query(query, values)
-    .then(result => {
-        response.status(200).send({
-            message: "Contact deleted."
-        })
-        next()
+    .then(next())   
     }).catch(error => {
-        response.status(404).send({
+        response.status(403).send({
             message: "SQL error on deleting the contact.",
             error: error
         })
@@ -155,10 +176,15 @@ router.post("/delete", (request, response, next) => {
 
 /**
  * @api {Search} /contacts/search Find a user
- * @apiName Search Contact
+ * @apiName Search for Contact
  * @apiGroup Contacts
  * 
- * @apiDescription Given a username or a email address, find the user associated with it.
+ * @apiDescription Given an username or an email address, find the user associated with it excluding yourself.
+ * 
+ * @apiSuccess (Success 200: Succesfully got list of users ) {String[]} The SQL rows containing memberiD, firstname, lastname, and username.
+ * 
+ * @apiError (400: Need a search parameter) Missing the search parameter in the header.
+ * @apiError (401: SQL Error) SQL ran into anm issue
  */
 router.get("/search", (request, response, next) => 
 {
@@ -166,7 +192,7 @@ router.get("/search", (request, response, next) =>
     console.log(request.headers.searchp)
     if(request.headers.searchp === undefined)
     {
-        response.status(420).send({
+        response.status(400).send({
             message: "Need a search parameter."
         })
     }
@@ -182,12 +208,13 @@ router.get("/search", (request, response, next) =>
             pool.query(query,values)
             .then(result =>
                 {
-                    response.send({
-                        rows: result.rows
+                    response.status(200).send({
+                        rows: result.rows,
+                        message: "Successfully got list of users."
                     })
                 })
                 .catch(error =>{
-                    response.status(400).send({
+                    response.status(401).send({
                         message: "SQL error while looking for email address",
                         error: error
                     })
@@ -205,7 +232,7 @@ router.get("/search", (request, response, next) =>
                 })
             })
             .catch(error =>{
-                response.status(400).send({
+                response.status(401).send({
                     message: "SQL error while looking for email address",
                     error: error
                 })
@@ -215,10 +242,10 @@ router.get("/search", (request, response, next) =>
 
 /**
  * @api {Verify} /contacts/verify Verify a contact 
- * @apiName Search Contact
+ * @apiName Verify a Contact
  * @apiGroup Contacts
  * 
- * @apiDescription Given a username or a email address, find the user associated with it.
+ * @apiDescription Given a memberID, find and verify the contact associated with it and the current user.
  */
 router.post("/verify", (request, response, next) => {
     if(request.headers.memberid === undefined)
