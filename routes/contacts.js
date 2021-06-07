@@ -152,7 +152,7 @@ router.post("/delete", (request, response, next) => {
 
     pool.query(query, values)
     .then(next())   
-    }).catch(error => {
+    .catch(error => {
         response.status(403).send({
             message: "SQL error on deleting the contact.",
             error: error
