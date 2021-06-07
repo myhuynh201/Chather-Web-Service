@@ -29,11 +29,21 @@ SUCCESSFULLY IMPLEMENTED: <br />
 - Upon successful login, takes user to home page.<br />
 <br />
 3. Home Page: <br />
-- Homepage will display greeting message, current weather, new notifications (friend requests, new messages, etc).<br />
+- Homepage will display greeting message, current weather.<br />
 - Ability to navigate to contact, chat or weather page.<br />
 - Ability to navigate to change password, change theme page or signout.<br />
 <br />
 4. Chat: <br />
+- List of chatrooms is displayed first. 
+- Click on a chatroom to navigate to that chatroom.
+    - When the chatroom is open, you can start reading and writing messages.
+    - Sending a chat message also sends a push notification to all members of the chatroom.
+- Swipe on a chatroom to delete the chatroom.
+- In the action bar, the user can enter the Start Chat view.
+    - In the Start Chat view, the user can enter a user's username(email) in order to add the user to the chatroom.
+    - After the user is done entering new users, the create-room button can be pressed to create and enter the room.
+    - If a username(email) does not exist in our database, the Start Chat view resets.
+    - If the room already exists, the user enters the existing room.
 <br />
 5. Contacts: <br />
 <br />
@@ -50,6 +60,7 @@ SUCCESSFULLY IMPLEMENTED: <br />
 - to satellite or even hybrid through hitting the change style button. <br />
 <br />
 8. Notifications: <br />
+- Chat messages send push notifications to all members in the chatroom.
 <br />
 9. Theme, Colors, Icons, Look and Feel: <br />
 - Option to select from 5 themes: blue, green, pink, purple, dark.<br />
@@ -57,15 +68,17 @@ SUCCESSFULLY IMPLEMENTED: <br />
 <br />
 _______________________________________________<br /><br />
 NOT IMPLEMENTED: <br />
+- Push notifications for chatroom being created/deleted
+- Updating chatroom members (adding/removing)
 _______________________________________________<br /><br />
 GUEST ACCOUNTS:<br />
 1. Guest 1: <br />
-- Email: <br />
-- Password: <br />
+- Email: test1@t.c<br />
+- Password: Test123!<br />
 <br />
 2. Guest 2:<br />
-- Email: <br />
-- Password: <br />
+- Email: test2@t.c<br />
+- Password: Test123!<br />
 <br />
 _______________________________________________<br /><br />
 CONTACT FOR QUESTIONS OR HELP: <br />
